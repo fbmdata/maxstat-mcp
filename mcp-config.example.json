@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "maxstat": {
+      "type": "streamable-http",
+      "url": "https://maxstat.ru/api/mcp",
+      "headers": {
+        "X-API-Token": "<API_TOKEN>"
+      }
+    }
+  }
+}
