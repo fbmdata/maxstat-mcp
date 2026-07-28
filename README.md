@@ -14,8 +14,6 @@
 
 [Русский](#русский) · [English](#english)
 
-[Статусы публикации в каталогах](docs/catalog-submissions.md) ·
-[Материалы для запуска на рынок](docs/launch-kit.ru.md) ·
 [Инструкция для AI-установщика](llms-install.md)
 
 ![Демонстрация MaxStat MCP](assets/maxstat-mcp-demo.gif)

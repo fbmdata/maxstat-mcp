@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -186,30 +186,7 @@ test("Cline can install the hosted server from the agent guide", async () => {
   assert.doesNotMatch(guide, /\bnpm\s+install\s+maxstat-mcp\b/i);
 });
 
-test("the Russian launch kit covers three concrete MCP workflows", async () => {
-  const launchKit = await readFile(
-    path.join(repoRoot, "docs/launch-kit.ru.md"),
-    "utf8",
-  );
-
-  for (const required of [
-    "## Кейс 1",
-    "## Кейс 2",
-    "## Кейс 3",
-    "search_channels",
-    "search_posts",
-    "create_keyword_subscription",
-    "assets/maxstat-mcp-demo.mp4",
-    "assets/maxstat-mcp-demo.gif",
-  ]) {
-    assert(
-      launchKit.includes(required),
-      `docs/launch-kit.ru.md must include ${required}`,
-    );
-  }
-});
-
-test("the Cline and demo launch assets are tracked and valid", async () => {
+test("the Cline icon and public demo assets are tracked and valid", async () => {
   const clineIcon = await readFile(
     path.join(repoRoot, "assets/maxstat-cline-400.png"),
   );
@@ -232,4 +209,22 @@ test("the duplicated full-width company logo stays out of the README", async () 
     readme,
     /!\[Логотип ООО «ФБМ Аналитикс»\]\(assets\/maxstat-logo\.png\)/,
   );
+});
+
+test("the public package excludes internal launch operations", async () => {
+  for (const internalPath of [
+    "docs/catalog-submissions.md",
+    "docs/launch-kit.ru.md",
+    "docs/superpowers",
+    "scripts/render-demo-video.sh",
+  ]) {
+    await assert.rejects(
+      access(path.join(repoRoot, internalPath)),
+      undefined,
+      `${internalPath} must not be published`,
+    );
+  }
+
+  const readme = await readFile(path.join(repoRoot, "README.md"), "utf8");
+  assert.doesNotMatch(readme, /catalog-submissions|launch-kit|superpowers/i);
 });
