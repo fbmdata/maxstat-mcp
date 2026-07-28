@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fbmdata/maxstat-mcp",
+  "title": "MaxStat MCP",
+  "description": "Search and analyze channels, posts, audience growth, views, and engagement in the MAX messenger.",
+  "version": "1.0.0",
+  "websiteUrl": "https://maxstat.ru/promo/mcp",
+  "repository": {
+    "url": "https://github.com/fbmdata/maxstat-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://maxstat.ru/api/mcp",
+      "headers": [
+        {
+          "name": "X-API-Token",
+          "description": "MaxStat API token",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
