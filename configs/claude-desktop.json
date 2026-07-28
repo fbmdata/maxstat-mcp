@@ -4,7 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "mcp-remote",
+        "mcp-remote@0.1.38",
         "https://maxstat.ru/api/mcp",
         "--header",
         "X-API-Token:${MAXSTAT_API_TOKEN}"

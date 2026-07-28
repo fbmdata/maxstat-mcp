@@ -1,0 +1,52 @@
+name: Предложение по улучшению
+description: Предложите улучшение публичного пакета MaxStat MCP
+title: "[Идея]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Здесь можно предложить новую интеграцию, улучшение конфигурации,
+        документации или возможностей MaxStat MCP.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Область
+      options:
+        - Новый MCP-клиент или платформа
+        - Инструменты и данные MaxStat MCP
+        - Установка и конфигурация
+        - Документация и примеры
+        - Другое
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую задачу нужно решить
+      description: Опишите сценарий и то, чего сейчас не хватает.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Предлагаемое решение
+      description: Расскажите, как вы видите желаемый результат.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Дополнительный контекст
+      description: При необходимости добавьте ссылки или обезличенные примеры.
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Безопасность
+      options:
+        - label: Я проверил, что сообщение не содержит API-токенов и персональных данных.
+          required: true

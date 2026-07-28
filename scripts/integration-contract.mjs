@@ -1,15 +1,19 @@
-import { access, readFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { promisify } from "node:util";
 
-export const RELEASE_VERSION = "1.2.0";
+const execFileAsync = promisify(execFile);
+
+export const RELEASE_VERSION = "1.2.1";
 export const MCP_URL = "https://maxstat.ru/api/mcp";
 export const TOKEN_HEADER = "X-API-Token";
 export const TOKEN_ENV = "MAXSTAT_API_TOKEN";
+export const MCP_REMOTE_PACKAGE = "mcp-remote@0.1.38";
 
 const JSON_FILES = [
   "server.json",
   "package.json",
-  "mcp-config.example.json",
   ".agents/plugins/marketplace.json",
   ".claude-plugin/marketplace.json",
   "plugins/maxstat/.codex-plugin/plugin.json",
@@ -58,6 +62,16 @@ const ALLOWED_TOKEN_VALUES = new Set([
   "X-API-Token:${MAXSTAT_API_TOKEN}",
 ]);
 
+const SECRET_SCAN_IGNORED_DIRECTORIES = new Set([
+  ".git",
+  ".worktrees",
+  "node_modules",
+]);
+
+const ALLOWED_HEX_DIGESTS = new Set([
+  "1370446bbe74d562608e8005a6ccce02d146a661fbd78674e11cc70b9618d6cf",
+]);
+
 export async function readJson(rootDir, relativePath) {
   const filePath = path.join(rootDir, relativePath);
   return JSON.parse(await readFile(filePath, "utf8"));
@@ -69,6 +83,95 @@ async function exists(filePath) {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function gitPublicFiles(rootDir) {
+  try {
+    const { stdout } = await execFileAsync(
+      "git",
+      ["ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+      {
+        cwd: rootDir,
+        maxBuffer: 10 * 1024 * 1024,
+      },
+    );
+    return stdout.split("\0").filter(Boolean);
+  } catch {
+    return null;
+  }
+}
+
+async function archivePublicFiles(rootDir, currentDir = rootDir) {
+  const files = [];
+  const entries = await readdir(currentDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (
+      entry.isDirectory() &&
+      SECRET_SCAN_IGNORED_DIRECTORIES.has(entry.name)
+    ) {
+      continue;
+    }
+
+    const absolutePath = path.join(currentDir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await archivePublicFiles(rootDir, absolutePath)));
+      continue;
+    }
+
+    if (entry.isFile()) {
+      files.push(path.relative(rootDir, absolutePath));
+    }
+  }
+
+  return files;
+}
+
+async function publicFiles(rootDir) {
+  return (await gitPublicFiles(rootDir)) ?? archivePublicFiles(rootDir);
+}
+
+function isBinary(content) {
+  const sample = content.subarray(0, 8_000);
+  if (sample.includes(0)) {
+    return true;
+  }
+
+  let controlCharacters = 0;
+  for (const byte of sample) {
+    if (byte < 7 || (byte > 13 && byte < 32)) {
+      controlCharacters += 1;
+    }
+  }
+  return sample.length > 0 && controlCharacters / sample.length > 0.3;
+}
+
+async function inspectTextSecrets(errors, rootDir) {
+  for (const file of (await publicFiles(rootDir)).sort()) {
+    const buffer = await readFile(path.join(rootDir, file));
+    if (isBinary(buffer)) {
+      continue;
+    }
+    const content = buffer.toString("utf8");
+
+    content.split(/\r?\n/).forEach((line, index) => {
+      for (const match of line.matchAll(/\b[0-9a-f]{64}\b/gi)) {
+        if (!ALLOWED_HEX_DIGESTS.has(match[0].toLowerCase())) {
+          errors.push(
+            `${file}:${index + 1}: token-like value must not be published.`,
+          );
+        }
+      }
+
+      if (
+        /(?:maxstat|mcp)[_-](?:live|test|prod)[_-][A-Za-z0-9]{8,}/i.test(line)
+      ) {
+        errors.push(
+          `${file}:${index + 1}: token-like value must not be published.`,
+        );
+      }
+    });
   }
 }
 
@@ -189,6 +292,12 @@ async function pngDimensions(filePath) {
 export async function validateRepository(rootDir) {
   const errors = [];
   const documents = new Map();
+
+  try {
+    await inspectTextSecrets(errors, rootDir);
+  } catch (error) {
+    errors.push(`Repository secret scan failed (${error.message}).`);
+  }
 
   for (const file of JSON_FILES) {
     try {
@@ -393,15 +502,6 @@ export async function validateRepository(rootDir) {
     "serverUrl",
     "${env:MAXSTAT_API_TOKEN}",
   );
-  checkHttpConfig(
-    errors,
-    documents,
-    "mcp-config.example.json",
-    ["mcpServers", "maxstat"],
-    "url",
-    "<API_TOKEN>",
-  );
-
   const gemini = documents.get("gemini-extension.json");
   if (gemini) {
     expectEqual(
@@ -442,6 +542,11 @@ export async function validateRepository(rootDir) {
     if (!args.includes(MCP_URL)) {
       errors.push(
         `configs/claude-desktop.json: mcp-remote args must include ${MCP_URL}.`,
+      );
+    }
+    if (args[0] !== "-y" || args[1] !== MCP_REMOTE_PACKAGE) {
+      errors.push(
+        `configs/claude-desktop.json: mcp-remote must be pinned to ${MCP_REMOTE_PACKAGE}.`,
       );
     }
     if (!args.includes("X-API-Token:${MAXSTAT_API_TOKEN}")) {
@@ -509,9 +614,7 @@ export async function validateRepository(rootDir) {
   }
 
   for (const [file, minimumWidth, square] of [
-    ["assets/maxstat-icon.png", 256, true],
     ["assets/maxstat-cline-400.png", 400, true],
-    ["assets/maxstat-logo.png", 512, false],
     ["plugins/maxstat/assets/maxstat-icon.png", 256, true],
     ["plugins/maxstat/assets/maxstat-logo.png", 512, false],
   ]) {
@@ -542,10 +645,7 @@ export async function validateRepository(rootDir) {
     );
   }
 
-  for (const mediaFile of [
-    "assets/maxstat-mcp-demo.mp4",
-    "assets/maxstat-mcp-demo.gif",
-  ]) {
+  for (const mediaFile of ["assets/maxstat-mcp-demo.gif"]) {
     if (!(await exists(path.join(rootDir, mediaFile)))) {
       errors.push(`${mediaFile}: required launch asset is missing.`);
     }
@@ -572,13 +672,6 @@ export async function validateRepository(rootDir) {
       errors.push(
         `README.md: obsolete Codex bearer-token command is forbidden.`,
       );
-    }
-    if (
-      readme.includes(
-        "![Логотип ООО «ФБМ Аналитикс»](assets/maxstat-logo.png)",
-      )
-    ) {
-      errors.push("README.md: duplicated full-width company logo is forbidden.");
     }
   } catch (error) {
     errors.push(`README.md: cannot read file (${error.message}).`);

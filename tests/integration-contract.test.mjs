@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import { access, cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { promisify } from "node:util";
 
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -12,6 +14,7 @@ const repoRoot = path.resolve(
 const validatorUrl = pathToFileURL(
   path.join(repoRoot, "scripts/integration-contract.mjs"),
 );
+const execFileAsync = promisify(execFile);
 
 async function loadValidator() {
   try {
@@ -36,6 +39,11 @@ async function updateJson(root, relativePath, update) {
   const value = JSON.parse(await readFile(filePath, "utf8"));
   update(value);
   await writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+async function initializeFixtureRepository(root) {
+  await execFileAsync("git", ["init", "--quiet"], { cwd: root });
+  await execFileAsync("git", ["add", "--all"], { cwd: root });
 }
 
 test("the checked-in repository satisfies every integration invariant", async () => {
@@ -91,11 +99,89 @@ test("token-like tracked values are rejected", async (t) => {
   const root = await fixture(t);
   await updateJson(root, "configs/generic-mcp.json", (config) => {
     config.mcpServers.maxstat.headers["X-API-Token"] =
-      "maxstat_live_1234567890";
+      "maxstat" + "_live_" + "1234567890";
   });
 
   const errors = await validateRepository(root);
   assert(errors.some((error) => error.includes("hardcoded token")));
+});
+
+test("token-like values in public text files are rejected", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  const readmePath = path.join(root, "README.md");
+  const readme = await readFile(readmePath, "utf8");
+  await writeFile(readmePath, `${readme}\n${"a".repeat(64)}\n`);
+
+  const errors = await validateRepository(root);
+  assert(
+    errors.some(
+      (error) =>
+        error.includes("README.md") && error.includes("token-like value"),
+    ),
+  );
+});
+
+test("token-like values in forced environment files are rejected", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  await initializeFixtureRepository(root);
+  await writeFile(path.join(root, ".env.local"), `${"b".repeat(64)}\n`);
+  await execFileAsync("git", ["add", "--force", ".env.local"], { cwd: root });
+
+  const errors = await validateRepository(root);
+  assert(
+    errors.some(
+      (error) =>
+        error.includes(".env.local") && error.includes("token-like value"),
+    ),
+  );
+});
+
+test("token-like values in ignored environment files are not scanned", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  await initializeFixtureRepository(root);
+  await writeFile(path.join(root, ".env.local"), `${"c".repeat(64)}\n`);
+
+  const errors = await validateRepository(root);
+  assert(
+    errors.every((error) => !error.includes(".env.local")),
+    errors.join("\n"),
+  );
+});
+
+test("token-like values in tracked extensionless text are rejected", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  await initializeFixtureRepository(root);
+  await writeFile(path.join(root, "run-check"), `${"d".repeat(64)}\n`);
+  await execFileAsync("git", ["add", "run-check"], { cwd: root });
+
+  const errors = await validateRepository(root);
+  assert(
+    errors.some(
+      (error) =>
+        error.includes("run-check") && error.includes("token-like value"),
+    ),
+  );
+});
+
+test("Claude Desktop rejects an unpinned mcp-remote package", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  await updateJson(root, "configs/claude-desktop.json", (config) => {
+    config.mcpServers.maxstat.args[1] = "mcp-remote";
+  });
+
+  const errors = await validateRepository(root);
+  assert(
+    errors.some(
+      (error) =>
+        error.includes("configs/claude-desktop.json") &&
+        error.includes("pinned"),
+    ),
+  );
 });
 
 test("release-bearing manifests must use the same version", async (t) => {
@@ -109,7 +195,7 @@ test("release-bearing manifests must use the same version", async (t) => {
   assert(
     errors.some(
       (error) =>
-        error.includes("gemini-extension.json") && error.includes("1.2.0"),
+        error.includes("gemini-extension.json") && error.includes("1.2.1"),
     ),
   );
 });
@@ -186,7 +272,7 @@ test("Cline can install the hosted server from the agent guide", async () => {
   assert.doesNotMatch(guide, /\bnpm\s+install\s+maxstat-mcp\b/i);
 });
 
-test("the Cline icon and public demo assets are tracked and valid", async () => {
+test("the Cline icon and public demo are tracked and valid", async () => {
   const clineIcon = await readFile(
     path.join(repoRoot, "assets/maxstat-cline-400.png"),
   );
@@ -194,34 +280,27 @@ test("the Cline icon and public demo assets are tracked and valid", async () => 
   assert.equal(clineIcon.readUInt32BE(16), 400);
   assert.equal(clineIcon.readUInt32BE(20), 400);
 
-  for (const mediaFile of [
-    "assets/maxstat-mcp-demo.mp4",
-    "assets/maxstat-mcp-demo.gif",
-  ]) {
-    const media = await readFile(path.join(repoRoot, mediaFile));
-    assert(media.length > 1024, `${mediaFile} must not be empty`);
-  }
-});
-
-test("the duplicated full-width company logo stays out of the README", async () => {
-  const readme = await readFile(path.join(repoRoot, "README.md"), "utf8");
-  assert.doesNotMatch(
-    readme,
-    /!\[Логотип ООО «ФБМ Аналитикс»\]\(assets\/maxstat-logo\.png\)/,
+  const demo = await readFile(
+    path.join(repoRoot, "assets/maxstat-mcp-demo.gif"),
   );
+  assert(demo.length > 1024, "assets/maxstat-mcp-demo.gif must not be empty");
 });
 
-test("the public package excludes internal launch operations", async () => {
-  for (const internalPath of [
+test("the public package excludes internal and redundant files", async () => {
+  for (const excludedPath of [
     "docs/catalog-submissions.md",
     "docs/launch-kit.ru.md",
     "docs/superpowers",
     "scripts/render-demo-video.sh",
+    "assets/maxstat-icon.png",
+    "assets/maxstat-logo.png",
+    "assets/maxstat-mcp-demo.mp4",
+    "mcp-config.example.json",
   ]) {
     await assert.rejects(
-      access(path.join(repoRoot, internalPath)),
+      access(path.join(repoRoot, excludedPath)),
       undefined,
-      `${internalPath} must not be published`,
+      `${excludedPath} must not be published`,
     );
   }
 

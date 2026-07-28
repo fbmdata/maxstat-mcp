@@ -1,7 +1,7 @@
 {
   "name": "maxstat-plugins",
   "description": "Аналитика каналов и публикаций MAX от ООО «ФБМ Аналитикс».",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "owner": {
     "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
     "email": "info@fbmdata.ru",

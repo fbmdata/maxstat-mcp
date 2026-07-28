@@ -3,6 +3,18 @@
 All notable public changes to the MaxStat MCP integration will be documented in
 this file.
 
+## [1.2.1] - 2026-07-29
+
+### Changed
+
+- Removed redundant root assets and the duplicate generic MCP configuration.
+- Pinned GitHub Actions, Claude Desktop bridge, Claude validator, Markdown
+  linter, and MCP Registry publisher versions.
+- Added checksum verification for the downloaded MCP Registry publisher.
+- Expanded secret-safety validation to every public text file.
+- Added focused compatibility and feature-request forms plus a
+  conversion-oriented README entry point.
+
 ## [1.2.0] - 2026-07-28
 
 ### Added
