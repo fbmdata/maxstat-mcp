@@ -14,7 +14,11 @@
 
 [Русский](#русский) · [English](#english)
 
-[Статусы публикации в каталогах](docs/catalog-submissions.md)
+[Статусы публикации в каталогах](docs/catalog-submissions.md) ·
+[Материалы для запуска на рынок](docs/launch-kit.ru.md) ·
+[Инструкция для AI-установщика](llms-install.md)
+
+![Демонстрация MaxStat MCP](assets/maxstat-mcp-demo.gif)
 
 > MaxStat размещает и обслуживает MCP-сервер. В репозитории опубликованы
 > манифесты, плагины, аналитический skill, клиентские конфигурации и
@@ -87,6 +91,7 @@ AI-агент подключается к живому индексу канал
 | Windsurf                | `~/.codeium/windsurf/mcp_config.json`                   |
 | JetBrains AI Assistant  | MCP-настройки IDE                                       |
 | Claude Desktop          | Локальный мост `mcp-remote`                             |
+| Cline                   | Удалённый Streamable HTTP из `llms-install.md`          |
 | Другие клиенты          | Универсальный Streamable HTTP JSON                      |
 
 #### Codex
@@ -172,6 +177,13 @@ gemini extensions install https://github.com/fbmdata/maxstat-mcp
 Перед запуском Cursor задайте `MAXSTAT_API_TOKEN`, затем нажмите кнопку выше.
 Альтернатива: объедините
 [`configs/cursor.json`](configs/cursor.json) с `~/.cursor/mcp.json`.
+
+#### Cline
+
+Задайте `MAXSTAT_API_TOKEN` до запуска Cline и передайте агенту
+[`llms-install.md`](llms-install.md). Файл содержит конфигурацию удалённого
+Streamable HTTP-сервера и проверку подключения. Локальный npm-пакет не нужен:
+MaxStat размещает и обслуживает сервер на `https://maxstat.ru/api/mcp`.
 
 #### Windsurf
 

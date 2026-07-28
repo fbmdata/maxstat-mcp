@@ -164,3 +164,72 @@ test("the Codex plugin embeds its environment-backed MCP configuration", async (
     },
   });
 });
+
+test("Cline can install the hosted server from the agent guide", async () => {
+  const guide = await readFile(path.join(repoRoot, "llms-install.md"), "utf8");
+
+  for (const required of [
+    "https://maxstat.ru/api/mcp",
+    "Streamable HTTP",
+    "X-API-Token",
+    "MAXSTAT_API_TOKEN",
+    "get_account_limits",
+    "tools/list",
+  ]) {
+    assert(
+      guide.includes(required),
+      `llms-install.md must document ${required}`,
+    );
+  }
+
+  assert.doesNotMatch(guide, /\bnpx\s+(?:-y\s+)?maxstat-mcp\b/i);
+  assert.doesNotMatch(guide, /\bnpm\s+install\s+maxstat-mcp\b/i);
+});
+
+test("the Russian launch kit covers three concrete MCP workflows", async () => {
+  const launchKit = await readFile(
+    path.join(repoRoot, "docs/launch-kit.ru.md"),
+    "utf8",
+  );
+
+  for (const required of [
+    "## Кейс 1",
+    "## Кейс 2",
+    "## Кейс 3",
+    "search_channels",
+    "search_posts",
+    "create_keyword_subscription",
+    "assets/maxstat-mcp-demo.mp4",
+    "assets/maxstat-mcp-demo.gif",
+  ]) {
+    assert(
+      launchKit.includes(required),
+      `docs/launch-kit.ru.md must include ${required}`,
+    );
+  }
+});
+
+test("the Cline and demo launch assets are tracked and valid", async () => {
+  const clineIcon = await readFile(
+    path.join(repoRoot, "assets/maxstat-cline-400.png"),
+  );
+  assert.equal(clineIcon.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+  assert.equal(clineIcon.readUInt32BE(16), 400);
+  assert.equal(clineIcon.readUInt32BE(20), 400);
+
+  for (const mediaFile of [
+    "assets/maxstat-mcp-demo.mp4",
+    "assets/maxstat-mcp-demo.gif",
+  ]) {
+    const media = await readFile(path.join(repoRoot, mediaFile));
+    assert(media.length > 1024, `${mediaFile} must not be empty`);
+  }
+});
+
+test("the duplicated full-width company logo stays out of the README", async () => {
+  const readme = await readFile(path.join(repoRoot, "README.md"), "utf8");
+  assert.doesNotMatch(
+    readme,
+    /!\[Логотип ООО «ФБМ Аналитикс»\]\(assets\/maxstat-logo\.png\)/,
+  );
+});

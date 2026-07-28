@@ -510,6 +510,7 @@ export async function validateRepository(rootDir) {
 
   for (const [file, minimumWidth, square] of [
     ["assets/maxstat-icon.png", 256, true],
+    ["assets/maxstat-cline-400.png", 400, true],
     ["assets/maxstat-logo.png", 512, false],
     ["plugins/maxstat/assets/maxstat-icon.png", 256, true],
     ["plugins/maxstat/assets/maxstat-logo.png", 512, false],
@@ -525,6 +526,28 @@ export async function validateRepository(rootDir) {
       }
     } catch (error) {
       errors.push(`${file}: cannot read PNG (${error.message}).`);
+    }
+  }
+
+  try {
+    const dimensions = await pngDimensions(
+      path.join(rootDir, "assets/maxstat-cline-400.png"),
+    );
+    if (dimensions?.width !== 400 || dimensions?.height !== 400) {
+      errors.push("assets/maxstat-cline-400.png: must be exactly 400×400.");
+    }
+  } catch (error) {
+    errors.push(
+      `assets/maxstat-cline-400.png: cannot read PNG (${error.message}).`,
+    );
+  }
+
+  for (const mediaFile of [
+    "assets/maxstat-mcp-demo.mp4",
+    "assets/maxstat-mcp-demo.gif",
+  ]) {
+    if (!(await exists(path.join(rootDir, mediaFile)))) {
+      errors.push(`${mediaFile}: required launch asset is missing.`);
     }
   }
 
@@ -550,8 +573,63 @@ export async function validateRepository(rootDir) {
         `README.md: obsolete Codex bearer-token command is forbidden.`,
       );
     }
+    if (
+      readme.includes(
+        "![Логотип ООО «ФБМ Аналитикс»](assets/maxstat-logo.png)",
+      )
+    ) {
+      errors.push("README.md: duplicated full-width company logo is forbidden.");
+    }
   } catch (error) {
     errors.push(`README.md: cannot read file (${error.message}).`);
+  }
+
+  for (const [file, required, forbidden] of [
+    [
+      "llms-install.md",
+      [
+        MCP_URL,
+        "Streamable HTTP",
+        TOKEN_HEADER,
+        TOKEN_ENV,
+        "get_account_limits",
+        "tools/list",
+      ],
+      [/\bnpx\s+(?:-y\s+)?maxstat-mcp\b/i, /\bnpm\s+install\s+maxstat-mcp\b/i],
+    ],
+    [
+      "docs/launch-kit.ru.md",
+      [
+        "## Кейс 1",
+        "## Кейс 2",
+        "## Кейс 3",
+        "search_channels",
+        "search_posts",
+        "create_keyword_subscription",
+        "assets/maxstat-mcp-demo.mp4",
+        "assets/maxstat-mcp-demo.gif",
+      ],
+      [],
+    ],
+  ]) {
+    try {
+      const content = await readFile(path.join(rootDir, file), "utf8");
+      for (const text of required) {
+        if (!content.includes(text)) {
+          errors.push(`${file}: missing required text ${text}.`);
+        }
+      }
+      for (const pattern of forbidden) {
+        if (pattern.test(content)) {
+          errors.push(`${file}: contains forbidden local package install.`);
+        }
+      }
+      if (/\b[0-9a-f]{64}\b/i.test(content)) {
+        errors.push(`${file}: contains a token-like 64-character hex value.`);
+      }
+    } catch (error) {
+      errors.push(`${file}: cannot read file (${error.message}).`);
+    }
   }
 
   return errors;
