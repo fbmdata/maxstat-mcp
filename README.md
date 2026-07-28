@@ -1,32 +1,70 @@
 # MaxStat MCP
 
-[![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-6f42c1)](https://modelcontextprotocol.io/)
-[![MaxStat](https://img.shields.io/badge/MaxStat-MAX%20analytics-7c3aed)](https://maxstat.ru/promo/mcp)
+[![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-4830E6)](https://modelcontextprotocol.io/)
+[![MaxStat](https://img.shields.io/badge/MAX_analytics-MaxStat-4830E6)](https://maxstat.ru/promo/mcp)
+[![Tools](https://img.shields.io/badge/MCP_tools-21-4830E6)](#complete-tool-reference)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**The official remote MCP server for analytics of channels and posts in the MAX messenger.**
+**The official remote MCP server for searching, analyzing and monitoring
+channels and publications in the MAX messenger.**
 
 [English](#english) · [Русский](#русский)
 
-> The MCP server is hosted by MaxStat. This repository contains its public
-> manifest, connection examples, and documentation; the server-side
-> implementation and MaxStat data are not published here.
+> MaxStat hosts the MCP server. This repository contains its public manifest,
+> connection examples and documentation. The server-side implementation and
+> MaxStat data are not published here.
 
 ## English
 
 Connect [MaxStat](https://maxstat.ru/) to Codex, Claude Code, Cursor, Claude
-Desktop, or any Streamable HTTP MCP client. An AI agent can search MAX channels
-and posts, inspect audience and engagement metrics, compare performance over
-time, and use the results in reports, research, and product prototypes.
+Desktop or any Streamable HTTP MCP client. An AI agent gets structured access
+to the live MAX channel and publication index instead of relying on search
+snippets or manually collected screenshots.
 
-### What you can do
+### Verified index scale
 
-- Find channels by name, description, link, category, audience size, or post count.
-- Search posts by text, channel, format, date, views, or likes.
-- Track subscriber growth, views, reactions, and publishing activity.
-- Compare channels and prepare structured analytics.
-- Add a public or invite-only MAX channel to the MaxStat tracking queue.
-- Use current MAX data while building dashboards, reports, and prototypes.
+| Verified on 2026-07-28 | Live index |
+| --- | ---: |
+| MAX channels | **367,759** |
+| Publications | **85,720,012** |
+| Channel categories | **42** |
+| MCP tools | **21** |
+
+The index grows continuously. Use `search_channels`, `search_posts` or
+`get_categories` to obtain current results.
+
+### Exactly what data you receive
+
+| Data area | Fields and metrics returned by the MCP |
+| --- | --- |
+| Channel discovery | Name, description, URL, category, access type, subscriber range, post-count range and relevance/date/audience sorting. |
+| Channel profile | ID, name, description, avatar, URL, public/private access, subscribers, posts, categories, timestamps and RKN status when available. |
+| Audience history | Daily subscriber totals, minimum, maximum, absolute growth and percentage growth for a selected period. |
+| Channel engagement | Total, average and maximum views and reactions per post, plus daily histories. |
+| Publishing activity | Number of posts, daily publishing history and distribution by text, photo, video, file and other formats. |
+| Publication discovery | Full-text search with channel, format, date, view and reaction filters. |
+| Publication profile | Text, URL, type, attachments, views, total reactions, per-reaction breakdown, timestamps and forward-source data. |
+| Publication history | Daily view and reaction totals for an individual post. |
+| Forwards | Detected reposts, their URLs, publication dates and destination channel IDs. |
+| Monitoring | Webhook subscriptions for every new channel post or for posts matching a keyword and optional category. |
+| Operations | Subscription status and delivery failures, pause/resume/update/delete actions, current plan, credit balance and request-level usage history. |
+
+You can also add a public or invite-only MAX channel to the MaxStat tracking
+queue.
+
+### Real-data example
+
+A verification request on 2026-07-28 returned:
+
+- **MAX • Анонсы**: 3,446,649 subscribers;
+- growth from 3,040,777 to 3,446,649 between 2026-06-29 and 2026-07-28:
+  **+405,872 / +13.3%**;
+- a selected publication: **17,719,253 views** and **185,992 reactions**;
+- reaction details including 👍, 🇷🇺, 🐶, ❤️, 👌, 🔥, 🎉 and 😍;
+- daily view and reaction histories and a list of detected forwards.
+
+These numbers demonstrate the response shape and are not static product
+promises.
 
 ### Connection details
 
@@ -121,41 +159,80 @@ Add the server to your MCP configuration:
 }
 ```
 
-### Available tools
+### Complete tool reference
 
-The server exposes current public MaxStat API operations as MCP tools.
+#### Search and catalog
 
-| Tool | Purpose |
-| --- | --- |
-| `get_categories` | List channel categories and the number of channels in each category. |
-| `search_channels` | Search channels by text, link, category, audience, and post count. |
-| `get_channel` | Get a full channel profile by ID. |
-| `add_channel` | Add a public or invite-only channel to the tracking queue. |
-| `get_channel_subscribers` | Get subscriber minimum, maximum, and growth for a period. |
-| `get_channel_views` | Get total, average, and maximum post views for a period. |
-| `get_channel_likes` | Get total, average, and maximum post likes for a period. |
-| `get_channel_posts` | Get post count, format distribution, and daily publishing history. |
-| `search_posts` | Search posts by text, channel, type, date, views, or likes. |
-| `get_post` | Get post text, attachments, link, views, likes, and reposts. |
-| `get_post_views` | Get current and historical post views. |
-| `get_post_likes` | Get reactions and historical post likes. |
+| Tool | Returns | Credits |
+| --- | --- | ---: |
+| `get_categories` | Categories and the current channel count in each category. | Free |
+| `search_channels` | Filtered, sorted and paginated channel profiles. | 3 |
+| `get_channel` | One complete channel profile by ID. | 1 |
+| `add_channel` | Adds a public or invite-only channel to the tracking queue. | Free |
+| `search_posts` | Filtered, sorted and paginated publications. | 3 |
+
+#### Channel analytics
+
+| Tool | Returns | Credits |
+| --- | --- | ---: |
+| `get_channel_subscribers` | Min/max audience, absolute and percentage growth and daily history. | 5 |
+| `get_channel_views` | Total, average and maximum views per post and daily history. | 5 |
+| `get_channel_likes` | Total, average and maximum reactions per post and daily history. | 5 |
+| `get_channel_posts` | Post total, format distribution and daily publishing history. | 5 |
+
+#### Post analytics
+
+| Tool | Returns | Credits |
+| --- | --- | ---: |
+| `get_post` | Post content, attachments, metrics, forward source and optional detected forwards. | 1 |
+| `get_post_views` | Current views and daily view history. | 5 |
+| `get_post_likes` | Reaction total, per-reaction breakdown and daily history. | 5 |
+
+#### Webhook monitoring
+
+| Tool | Returns or action | Credits |
+| --- | --- | ---: |
+| `create_channel_subscription` | Subscribes a public HTTPS callback to new posts from one channel. | Free to create; 2 per delivery |
+| `create_keyword_subscription` | Subscribes a callback to new posts matching a query and optional category. | Free to create; 3 per delivery |
+| `get_subscriptions` | Lists webhook subscriptions with optional status/type filters. | Free |
+| `get_subscription` | Returns one subscription, delivery status and last error. | Free |
+| `update_subscription` | Updates the callback URL or pauses/resumes delivery. | Free |
+| `delete_subscription` | Deletes a webhook subscription. | Free |
+
+Webhook callbacks must use a publicly available HTTPS URL.
+
+#### Account and usage
+
+| Tool | Returns | Credits |
+| --- | --- | ---: |
+| `get_account_subscription` | Current plan, status, period and credit state. | Free |
+| `get_account_limits` | Included, purchased, used and remaining credits. | Free |
+| `get_account_usage` | Paginated request-level credit usage history. | Free |
 
 ### Example prompts
 
 ```text
-Find 20 fast-growing technology channels in MAX over the last 30 days.
+Find 20 technology channels with the fastest subscriber growth over the last
+30 days. Return links, current audience, absolute growth and growth rate.
 ```
 
 ```text
-Compare these five channels by subscribers, view growth, and publishing frequency.
+Compare these five channels by audience, average views, reactions, publishing
+frequency and content-format mix.
 ```
 
 ```text
-Find posts about mortgages published in June and return their links, views, and reactions.
+Find MAX posts about mortgages published in July. Return their links, text,
+attachments, views, reaction breakdown and detected forwards.
 ```
 
 ```text
-Build a channel ranking page in this project and use MaxStat MCP as the data source.
+Subscribe https://example.com/maxstat-webhook to new posts containing
+"искусственный интеллект" in the Technology category.
+```
+
+```text
+Show my MaxStat plan, remaining credits and the latest ten charged requests.
 ```
 
 ### Usage and billing
@@ -166,27 +243,36 @@ calls and direct API requests consume the same credit allowance. See
 
 ## Русский
 
-MaxStat MCP подключает актуальные данные о каналах и публикациях в MAX к
-Codex, Claude Code, Cursor, Claude Desktop и другим MCP-клиентам. AI-агент
-может самостоятельно выбирать инструменты MaxStat, выполнять поиск и собирать
-аналитику прямо в рабочем контексте.
+MaxStat MCP подключает к AI-агенту **живой индекс каналов и публикаций MAX**.
+Через него можно получить не абстрактную «аналитику», а конкретные данные:
 
-### Возможности
+- карточки каналов с описанием, ссылкой, категориями, доступностью, аудиторией,
+  количеством публикаций и статусом РКН;
+- поиск каналов по тексту, категории, числу подписчиков и публикаций;
+- дневную динамику подписчиков, абсолютный и процентный прирост;
+- суммарные, средние и максимальные просмотры и реакции на публикацию;
+- частоту публикаций и распределение контента по форматам;
+- полнотекстовый поиск публикаций с фильтрами по каналу, формату, датам,
+  просмотрам и реакциям;
+- текст, ссылку, вложения, просмотры, детальные реакции и историю показателей
+  отдельной публикации;
+- найденные репосты и каналы, которые их разместили;
+- webhook-мониторинг новых публикаций канала или упоминаний ключевого слова;
+- текущий тариф, остаток кредитов и историю списаний API.
 
-- Поиск каналов по названию, описанию, ссылке, категории и размеру аудитории.
-- Поиск публикаций по тексту, каналу, формату, датам, просмотрам и лайкам.
-- Анализ динамики подписчиков, просмотров, реакций и частоты публикаций.
-- Сравнение каналов и подготовка аналитических отчётов.
-- Добавление публичных и пригласительных MAX-каналов в очередь отслеживания.
-- Использование данных MAX при создании прототипов, интерфейсов и исследований.
+На 2026-07-28 через MCP были доступны **367 759 каналов**, **85 720 012
+публикаций**, **42 категории** и **21 инструмент**. Индекс постоянно
+обновляется, поэтому актуальные значения следует запрашивать через MCP.
 
 ### Быстрый старт
 
-1. Получите токен в [личном кабинете MaxStat API](https://maxstat.ru/dashboard/api).
+1. Получите токен в
+   [личном кабинете MaxStat API](https://maxstat.ru/dashboard/api).
 2. Выберите конфигурацию для своего клиента в разделе
    [Connect your client](#2-connect-your-client).
-3. Замените `<API_TOKEN>` своим токеном или сохраните его в переменной окружения.
-4. Перезапустите MCP-клиент и проверьте, что инструменты MaxStat появились в списке.
+3. Замените `<API_TOKEN>` своим токеном или сохраните его в переменной
+   окружения.
+4. Перезапустите MCP-клиент и проверьте, что появились 21 инструмент MaxStat.
 
 Test Drive активируется при первом API-запросе и предоставляет 1 000 кредитов
 каждые 30 дней. MCP входит во все тарифы API без дополнительной оплаты; MCP и
@@ -195,19 +281,23 @@ Test Drive активируется при первом API-запросе и п
 ### Примеры запросов
 
 ```text
-Найди 20 быстрорастущих каналов MAX о технологиях за последние 30 дней.
+Найди 20 технологических каналов MAX с максимальным приростом подписчиков за
+последние 30 дней. Верни ссылки, текущую аудиторию и процент роста.
 ```
 
 ```text
-Сравни эти пять каналов по числу подписчиков, динамике просмотров и частоте публикаций.
+Сравни эти пять каналов по аудитории, средним просмотрам, реакциям, частоте
+публикаций и распределению форматов контента.
 ```
 
 ```text
-Найди публикации про ипотеку за июнь и верни ссылки, просмотры и реакции.
+Найди публикации об ипотеке за июль. Верни ссылки, текст, вложения, просмотры,
+детальные реакции и найденные репосты.
 ```
 
 ```text
-Создай в проекте страницу рейтинга каналов MAX и используй MaxStat MCP для получения данных.
+Подпиши webhook на новые публикации со словами «искусственный интеллект» в
+категории «Технологии».
 ```
 
 ## Links / Ссылки
@@ -216,6 +306,7 @@ Test Drive активируется при первом API-запросе и п
 - [Get an API token / Получить API-токен](https://maxstat.ru/dashboard/api)
 - [API documentation / Документация API](https://maxstat.ru/api/docs)
 - [API plans / Тарифы API](https://maxstat.ru/promo/api)
+- [FBM Analytics](https://fbmdata.ru)
 - [MaxStat Insights in MAX](https://max.ru/maxstat)
 - [FBM API Insights in Telegram](https://t.me/fbmapi)
 
@@ -225,6 +316,7 @@ security vulnerability, follow [SECURITY.md](SECURITY.md).
 
 ## License
 
-Files published in this repository are available under the [MIT License](LICENSE).
-The license does **not** apply to the MaxStat service, API, data, trademarks, or
-server-side implementation. See [NOTICE](NOTICE) for details.
+Files published in this repository are available under the
+[MIT License](LICENSE). The license does **not** apply to the MaxStat service,
+API, data, trademarks or server-side implementation. See [NOTICE](NOTICE) for
+details.
