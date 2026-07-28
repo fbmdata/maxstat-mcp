@@ -1,7 +1,9 @@
 MaxStat MCP repository
 Copyright (c) 2026 FBM Analytics LLC (ООО «ФБМ Аналитикс»)
 
-The MIT License applies only to files published in this repository.
+The MIT License applies only to files published in this repository, including
+the public manifests, plugin metadata, analytics skill, client configuration
+examples, documentation, validation scripts, and tests.
 
 The MaxStat service, API, data, databases, trademarks, branding, and
 server-side implementation are proprietary and are not licensed under the MIT

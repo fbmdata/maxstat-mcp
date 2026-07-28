@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "maxstat": {
+      "url": "https://maxstat.ru/api/mcp",
+      "headers": {
+        "X-API-Token": "${env:MAXSTAT_API_TOKEN}"
+      }
+    }
+  }
+}

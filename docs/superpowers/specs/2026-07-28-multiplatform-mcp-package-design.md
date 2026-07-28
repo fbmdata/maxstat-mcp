@@ -2,8 +2,8 @@
 
 ## Status
 
-Drafted on 2026-07-28 from the approved multiplatform direction. This document
-is the final technical-design checkpoint before implementation.
+Approved on 2026-07-28. This document defines the implementation and release
+contract for the multiplatform package.
 
 ## Goal
 
@@ -109,7 +109,6 @@ maxstat-mcp/
 │       ├── skills/
 │       │   └── maxstat-analytics/
 │       │       └── SKILL.md
-│       ├── .mcp.codex.json
 │       └── .mcp.json
 ├── scripts/
 │   └── validate-integrations.mjs
@@ -141,9 +140,7 @@ root remains the Gemini CLI extension root because the Gemini gallery requires
 
 `plugins/maxstat/.codex-plugin/plugin.json` provides publisher, website,
 repository, license, Russian interface copy, starter prompts, brand assets,
-the skill path, and `mcpServers: "./.mcp.codex.json"`.
-
-`plugins/maxstat/.mcp.codex.json` uses a direct server map:
+the skill path, and an inline `mcpServers` map:
 
 ```json
 {
@@ -163,7 +160,9 @@ sends `Authorization: Bearer ...`, while MaxStat requires `X-API-Token`.
 
 `.claude-plugin/marketplace.json` exposes the same
 `./plugins/maxstat` directory. VS Code and GitHub Copilot CLI can consume this
-Claude-compatible marketplace and plugin format.
+Claude-compatible marketplace and plugin format. The marketplace has its own
+release version; the plugin entry does not duplicate the plugin version from
+`plugin.json`, preventing stale marketplace metadata from masking updates.
 
 `plugins/maxstat/.claude-plugin/plugin.json` points to `./.mcp.json` and
 `./skills/`. The shared `.mcp.json` uses:

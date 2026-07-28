@@ -1,0 +1,14 @@
+{
+  "name": "maxstat-mcp-integration",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Validation tooling for the public MaxStat MCP integration package.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "validate": "node scripts/validate-integrations.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "maxstat-api-token",
+      "description": "MaxStat API token",
+      "password": true
+    }
+  ],
+  "servers": {
+    "maxstat": {
+      "type": "http",
+      "url": "https://maxstat.ru/api/mcp",
+      "headers": {
+        "X-API-Token": "${input:maxstat-api-token}"
+      }
+    }
+  }
+}

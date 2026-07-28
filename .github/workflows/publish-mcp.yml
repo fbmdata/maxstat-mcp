@@ -18,15 +18,37 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v5
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Verify the release version
         if: github.ref_type == 'tag'
         shell: bash
         run: |
-          manifest_version="$(jq -r '.version' server.json)"
-          if [[ "${GITHUB_REF_NAME}" != "v${manifest_version}" ]]; then
-            echo "Tag ${GITHUB_REF_NAME} does not match server.json version ${manifest_version}."
-            exit 1
-          fi
+          release_version="${GITHUB_REF_NAME#v}"
+          files=(
+            server.json
+            package.json
+            gemini-extension.json
+            .claude-plugin/marketplace.json
+            plugins/maxstat/.codex-plugin/plugin.json
+            plugins/maxstat/.claude-plugin/plugin.json
+          )
+          for file in "${files[@]}"; do
+            manifest_version="$(jq -r '.version' "$file")"
+            if [[ "$release_version" != "$manifest_version" ]]; then
+              echo "Tag ${GITHUB_REF_NAME} does not match $file version ${manifest_version}."
+              exit 1
+            fi
+          done
+
+      - name: Test integration contracts
+        run: npm test
+
+      - name: Validate integration manifests
+        run: npm run validate
 
       - name: Install mcp-publisher
         shell: bash

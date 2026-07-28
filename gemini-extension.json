@@ -1,0 +1,22 @@
+{
+  "name": "maxstat-mcp",
+  "version": "1.2.0",
+  "description": "Аналитика каналов и публикаций MAX / MAX channel and publication analytics.",
+  "settings": [
+    {
+      "name": "MaxStat API token",
+      "description": "Создайте токен: https://maxstat.ru/dashboard/api",
+      "envVar": "MAXSTAT_API_TOKEN",
+      "sensitive": true
+    }
+  ],
+  "mcpServers": {
+    "maxstat": {
+      "httpUrl": "https://maxstat.ru/api/mcp",
+      "headers": {
+        "X-API-Token": "${MAXSTAT_API_TOKEN}"
+      }
+    }
+  },
+  "contextFileName": "GEMINI.md"
+}

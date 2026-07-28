@@ -1,0 +1,27 @@
+{
+  "name": "maxstat-plugins",
+  "description": "Аналитика каналов и публикаций MAX от ООО «ФБМ Аналитикс».",
+  "version": "1.2.0",
+  "owner": {
+    "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
+    "email": "info@fbmdata.ru",
+    "url": "https://fbmdata.ru/"
+  },
+  "plugins": [
+    {
+      "name": "maxstat",
+      "source": "./plugins/maxstat",
+      "description": "Поиск, аналитика и мониторинг каналов и публикаций MAX.",
+      "author": {
+        "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
+        "email": "info@fbmdata.ru",
+        "url": "https://fbmdata.ru/"
+      },
+      "homepage": "https://maxstat.ru/promo/mcp",
+      "repository": "https://github.com/fbmdata/maxstat-mcp",
+      "license": "MIT",
+      "keywords": ["max", "analytics", "channels", "publications", "mcp"],
+      "category": "data"
+    }
+  ]
+}

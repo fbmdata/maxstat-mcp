@@ -1,29 +1,60 @@
-# Contributing
+# Вклад в MaxStat MCP
 
-Thank you for helping improve the MaxStat MCP integration.
+Спасибо за помощь в развитии публичного интеграционного пакета MaxStat MCP.
 
-You can open an issue or pull request for:
+Можно присылать:
 
-- corrections and improvements to the documentation;
-- connection examples for additional MCP clients;
-- fixes to `server.json` or other public metadata;
-- reproducible compatibility problems with supported clients.
+- исправления и улучшения документации;
+- конфигурации для дополнительных MCP-клиентов;
+- исправления публичных манифестов и метаданных;
+- воспроизводимые проблемы совместимости;
+- улучшения русскоязычного аналитического skill.
 
-Before submitting a pull request:
+Сервер MaxStat является размещённым сервисом. Серверная реализация не входит в
+этот репозиторий, поэтому backend feature request следует создавать как issue,
+а не как изменение закрытого кода.
 
-1. Do not include API tokens or other secrets.
-2. Keep examples copy-pasteable and use `<API_TOKEN>` for credentials.
-3. Verify every changed URL and JSON example.
-4. Explain which MCP client and version you tested.
+## Перед pull request
 
-The MaxStat MCP server is a hosted service. Its server-side implementation is
-not part of this repository, so backend feature requests should be submitted as
-issues rather than code changes.
+1. Не добавляйте API-токены, персональные данные или другие секреты.
+2. Используйте только `<API_TOKEN>` или документированную переменную
+   `MAXSTAT_API_TOKEN`.
+3. Не заменяйте `X-API-Token` на `Authorization` или Bearer-аутентификацию.
+4. Сохраняйте версию `1.2.0` согласованной во всех release-bearing
+   манифестах.
+5. Используйте kebab-case для имён плагинов и skill.
+6. Проверяйте каждую изменённую ссылку и конфигурацию.
+7. Укажите клиент и версию, на которых проверено изменение.
 
----
+## Локальная проверка
 
-## Как помочь проекту
+Требуется Node.js 20 или новее.
 
-Мы принимаем исправления документации, примеры подключения новых MCP-клиентов
-и сообщения о проблемах совместимости. Не добавляйте в issues, pull requests
-или примеры настоящие API-токены и другие секреты.
+```bash
+npm test
+npm run validate
+npx --yes markdownlint-cli2 "**/*.md"
+```
+
+Для изменений Claude-compatible плагина дополнительно выполните:
+
+```bash
+claude plugin validate . --strict
+claude plugin validate ./plugins/maxstat --strict
+```
+
+Для Codex-плагина выполните:
+
+```bash
+python3 /path/to/plugin-creator/scripts/validate_plugin.py plugins/maxstat
+```
+
+## English
+
+Contributions are welcome for documentation, additional client
+configurations, public manifest fixes, reproducible compatibility reports, and
+the Russian-first analytics skill.
+
+Before opening a pull request, do not include secrets, preserve the required
+`X-API-Token` header, keep release versions consistent, and run every command
+from the local validation section. Explain which client and version you tested.

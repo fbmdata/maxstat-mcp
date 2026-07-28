@@ -3,6 +3,33 @@
 All notable public changes to the MaxStat MCP integration will be documented in
 this file.
 
+## [1.2.0] - 2026-07-28
+
+### Added
+
+- Codex and Claude-compatible plugin marketplaces.
+- Installable plugin metadata for Codex, Claude Code, VS Code, and GitHub
+  Copilot CLI.
+- Gemini CLI extension with sensitive MaxStat token configuration.
+- Direct configurations for Cursor, VS Code, Codex, Claude Code, Claude
+  Desktop, Windsurf, JetBrains AI Assistant, and generic MCP clients.
+- Russian-first MaxStat analytics skill covering all 21 tools and common
+  research workflows.
+- Verified FBM Analytics brand assets for plugin installation surfaces.
+- Automated cross-platform manifest, path, version, and secret-safety tests.
+
+### Changed
+
+- Reworked the README around Russian and CIS users, with Russian-first
+  installation and capability documentation.
+- Clarified that MIT covers the public integration package, not the hosted
+  MaxStat service, server implementation, data, or trademarks.
+
+### Fixed
+
+- Corrected Codex authentication to send `MAXSTAT_API_TOKEN` in the required
+  `X-API-Token` header instead of `Authorization: Bearer`.
+
 ## [1.1.0] - 2026-07-28
 
 ### Added

@@ -1,0 +1,15 @@
+interface:
+  display_name: "MaxStat Analytics"
+  short_description: "Аналитика каналов и публикаций MAX"
+  default_prompt: "Use $maxstat-analytics to compare MAX channels by audience growth and engagement."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "maxstat"
+      description: "Поиск, аналитика и мониторинг каналов и публикаций MAX"
+      transport: "streamable_http"
+      url: "https://maxstat.ru/api/mcp"
+
+policy:
+  allow_implicit_invocation: true

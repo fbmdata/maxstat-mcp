@@ -1,0 +1,52 @@
+{
+  "name": "maxstat",
+  "version": "1.2.0",
+  "description": "Поиск, аналитика и мониторинг каналов и публикаций MAX.",
+  "author": {
+    "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
+    "email": "info@fbmdata.ru",
+    "url": "https://fbmdata.ru/"
+  },
+  "homepage": "https://maxstat.ru/promo/mcp",
+  "repository": "https://github.com/fbmdata/maxstat-mcp",
+  "license": "MIT",
+  "keywords": [
+    "max",
+    "analytics",
+    "channels",
+    "publications",
+    "monitoring",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": {
+    "maxstat": {
+      "url": "https://maxstat.ru/api/mcp",
+      "env_http_headers": {
+        "X-API-Token": "MAXSTAT_API_TOKEN"
+      }
+    }
+  },
+  "interface": {
+    "displayName": "MaxStat MCP",
+    "shortDescription": "Аналитика каналов и публикаций MAX",
+    "longDescription": "Ищите каналы и публикации MAX, сравнивайте аудиторию, просмотры и реакции, находите пересылки и настраивайте webhook-мониторинг.",
+    "developerName": "ООО «ФБМ Аналитикс» / FBM Analytics",
+    "category": "Data & Analytics",
+    "capabilities": [
+      "Поиск каналов и публикаций",
+      "История аудитории и вовлечённости",
+      "Пересылки и webhook-мониторинг",
+      "Контроль тарифов и кредитов"
+    ],
+    "websiteURL": "https://maxstat.ru/promo/mcp",
+    "defaultPrompt": [
+      "Найди растущие каналы MAX в выбранной тематике.",
+      "Сравни каналы MAX по аудитории и вовлечённости.",
+      "Найди публикации MAX и обнаруженные пересылки."
+    ],
+    "brandColor": "#4830E6",
+    "composerIcon": "./assets/maxstat-icon.png",
+    "logo": "./assets/maxstat-logo.png"
+  }
+}

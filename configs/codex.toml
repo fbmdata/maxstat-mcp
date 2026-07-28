@@ -1,0 +1,3 @@
+[mcp_servers.maxstat]
+url = "https://maxstat.ru/api/mcp"
+env_http_headers = { "X-API-Token" = "MAXSTAT_API_TOKEN" }

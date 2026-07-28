@@ -53,7 +53,6 @@ Node.js 20 built-in test runner, GitHub Actions, MCP Streamable HTTP.
 | `.claude-plugin/marketplace.json` | Claude/VS Code/Copilot marketplace |
 | `plugins/maxstat/.codex-plugin/plugin.json` | Codex plugin metadata |
 | `plugins/maxstat/.claude-plugin/plugin.json` | Claude-compatible metadata |
-| `plugins/maxstat/.mcp.codex.json` | Codex remote MCP configuration |
 | `plugins/maxstat/.mcp.json` | Claude/VS Code/Copilot MCP configuration |
 | `plugins/maxstat/skills/maxstat-analytics/SKILL.md` | Shared analytics workflow |
 | `gemini-extension.json` | Gemini CLI extension and secure token setting |
@@ -121,7 +120,7 @@ test("Authorization bearer configuration is rejected", async (t) => {
   const root = await fixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   await writeFile(
-    path.join(root, "plugins/maxstat/.mcp.codex.json"),
+    path.join(root, "plugins/maxstat/.codex-plugin/plugin.json"),
     JSON.stringify({
       maxstat: {
         url: "https://maxstat.ru/api/mcp",
@@ -390,7 +389,6 @@ git commit -m "feat: add MaxStat brand assets and analytics guidance"
 - Create: `.claude-plugin/marketplace.json`
 - Create: `plugins/maxstat/.codex-plugin/plugin.json`
 - Create: `plugins/maxstat/.claude-plugin/plugin.json`
-- Create: `plugins/maxstat/.mcp.codex.json`
 - Create: `plugins/maxstat/.mcp.json`
 
 **Interfaces:**
@@ -431,11 +429,9 @@ Create `.agents/plugins/marketplace.json`:
 - [ ] **Step 2: Create the Codex plugin manifest and MCP config**
 
 Create `plugins/maxstat/.codex-plugin/plugin.json` with exact release metadata,
-the two asset paths, Russian-first `interface` copy, at least five Russian
-`defaultPrompt` values, `skills: "./skills/"`, and
-`mcpServers: "./.mcp.codex.json"`.
-
-The MCP file must be exactly:
+the two asset paths, Russian-first `interface` copy, three short Russian
+`defaultPrompt` values, `skills: "./skills/"`, and an inline `mcpServers`
+object:
 
 ```json
 {
@@ -466,7 +462,6 @@ Create `.claude-plugin/marketplace.json`:
       "name": "maxstat",
       "source": "./plugins/maxstat",
       "description": "Поиск, аналитика и мониторинг каналов и публикаций MAX.",
-      "version": "1.2.0",
       "author": {
         "name": "ООО «ФБМ Аналитикс» / FBM Analytics"
       },

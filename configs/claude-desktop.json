@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "maxstat": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://maxstat.ru/api/mcp",
+        "--header",
+        "X-API-Token:${MAXSTAT_API_TOKEN}"
+      ],
+      "env": {
+        "MAXSTAT_API_TOKEN": "<API_TOKEN>"
+      }
+    }
+  }
+}

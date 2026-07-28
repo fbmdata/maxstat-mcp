@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "maxstat",
+  "displayName": "MaxStat MCP",
+  "version": "1.2.0",
+  "description": "Аналитика каналов и публикаций MAX / MAX channel and publication analytics.",
+  "author": {
+    "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
+    "email": "info@fbmdata.ru",
+    "url": "https://fbmdata.ru/"
+  },
+  "homepage": "https://maxstat.ru/promo/mcp",
+  "repository": "https://github.com/fbmdata/maxstat-mcp",
+  "license": "MIT",
+  "keywords": [
+    "max",
+    "analytics",
+    "channels",
+    "publications",
+    "monitoring",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}
