@@ -6,6 +6,8 @@
 [![Tools](https://img.shields.io/badge/MCP_tools-21-4830E6)](#все-21-инструмент)
 [![Version](https://img.shields.io/badge/release-1.2.0-4830E6)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Official MCP Registry](https://img.shields.io/badge/Official_MCP_Registry-live-2EA44F)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.fbmdata%2Fmaxstat-mcp)
+[![Glama](https://img.shields.io/badge/Glama-listed-2EA44F)](https://glama.ai/mcp/connectors/io.github.fbmdata/maxstat-mcp)
 
 **Официальный удалённый MCP-сервер MaxStat для поиска, аналитики и мониторинга
 каналов и публикаций в мессенджере MAX.**
@@ -13,6 +15,8 @@
 Разработчик и оператор: **ООО «ФБМ Аналитикс» / FBM Analytics**.
 
 [Русский](#русский) · [English](#english)
+
+[Статусы публикации в каталогах](docs/catalog-submissions.md)
 
 > MaxStat размещает и обслуживает MCP-сервер. В репозитории опубликованы
 > манифесты, плагины, аналитический skill, клиентские конфигурации и
