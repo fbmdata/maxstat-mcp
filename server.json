@@ -3,7 +3,7 @@
   "name": "io.github.fbmdata/maxstat-mcp",
   "title": "MaxStat MCP",
   "description": "MAX channel and post search, metric histories, reactions, forwards, webhooks and account usage.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "websiteUrl": "https://maxstat.ru/promo/mcp",
   "repository": {
     "url": "https://github.com/fbmdata/maxstat-mcp",

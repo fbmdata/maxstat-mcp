@@ -1,0 +1,71 @@
+name: Проблема подключения
+description: Сообщите о несовместимости MaxStat MCP с конкретным клиентом
+title: "[Совместимость]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за сообщение. Не публикуйте API-токены, персональные данные
+        или содержимое ответов, которое не предназначено для общего доступа.
+
+  - type: dropdown
+    id: client
+    attributes:
+      label: MCP-клиент
+      options:
+        - Codex
+        - Claude Code
+        - Visual Studio Code
+        - GitHub Copilot CLI
+        - Gemini CLI
+        - Cursor
+        - Cline
+        - Windsurf
+        - JetBrains AI Assistant
+        - Claude Desktop
+        - Другой
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Версия клиента
+      placeholder: Например, 1.2.3
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Шаги воспроизведения
+      description: Укажите использованную инструкцию или конфигурацию.
+      placeholder: |
+        1. Добавил конфигурацию…
+        2. Перезапустил клиент…
+        3. Получил ошибку…
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ожидаемый результат
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Фактический результат
+      description: Удалите токены и персональные данные из логов и скриншотов.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Безопасность
+      options:
+        - label: Я проверил, что сообщение не содержит API-токенов и персональных данных.
+          required: true

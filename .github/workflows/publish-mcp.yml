@@ -10,16 +10,20 @@ permissions:
   contents: read
   id-token: write
 
+env:
+  MCP_PUBLISHER_VERSION: v1.8.0
+  MCP_PUBLISHER_SHA256: 1370446bbe74d562608e8005a6ccce02d146a661fbd78674e11cc70b9618d6cf
+
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24"
 
@@ -53,9 +57,12 @@ jobs:
       - name: Install mcp-publisher
         shell: bash
         run: |
-          curl -L \
-            "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" \
-            | tar xz mcp-publisher
+          archive="mcp-publisher_linux_amd64.tar.gz"
+          curl --fail --location --silent --show-error \
+            "https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}/${archive}" \
+            --output "${archive}"
+          echo "${MCP_PUBLISHER_SHA256}  ${archive}" | sha256sum --check -
+          tar xzf "${archive}" mcp-publisher
 
       - name: Validate server.json
         run: ./mcp-publisher validate server.json

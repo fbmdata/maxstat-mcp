@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "maxstat",
   "displayName": "MaxStat MCP",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Аналитика каналов и публикаций MAX / MAX channel and publication analytics.",
   "author": {
     "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
