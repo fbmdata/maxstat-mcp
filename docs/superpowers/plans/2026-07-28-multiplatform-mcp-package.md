@@ -17,7 +17,8 @@ A dependency-free Node.js validator enforces shared endpoint, header, version,
 path, copy, and secret-safety invariants before CI or release.
 
 **Tech Stack:** JSON manifests, Markdown skills/docs, TOML configuration,
-Node.js 20 built-in test runner, GitHub Actions, MCP Streamable HTTP.
+Node.js 24 in CI (Node.js 20 or newer locally), GitHub Actions, MCP Streamable
+HTTP.
 
 ## Global Constraints
 
@@ -43,28 +44,28 @@ Node.js 20 built-in test runner, GitHub Actions, MCP Streamable HTTP.
 
 ## File map
 
-| File | Responsibility |
-| --- | --- |
-| `package.json` | Dependency-free validation and test commands |
-| `scripts/integration-contract.mjs` | Reusable repository validation logic |
-| `scripts/validate-integrations.mjs` | CLI wrapper for validation |
-| `tests/integration-contract.test.mjs` | Contract and negative-fixture tests |
-| `.agents/plugins/marketplace.json` | Codex marketplace |
-| `.claude-plugin/marketplace.json` | Claude/VS Code/Copilot marketplace |
-| `plugins/maxstat/.codex-plugin/plugin.json` | Codex plugin metadata |
-| `plugins/maxstat/.claude-plugin/plugin.json` | Claude-compatible metadata |
-| `plugins/maxstat/.mcp.json` | Claude/VS Code/Copilot MCP configuration |
-| `plugins/maxstat/skills/maxstat-analytics/SKILL.md` | Shared analytics workflow |
-| `gemini-extension.json` | Gemini CLI extension and secure token setting |
-| `GEMINI.md` | Gemini-specific Russian-first operating guidance |
-| `configs/*.json`, `configs/codex.toml` | Copy-paste client configurations |
-| `docs/catalog-submissions.md` | Directory submission ledger |
-| `assets/*`, `plugins/maxstat/assets/*` | Marketplace presentation assets |
-| `.github/workflows/validate-integrations.yml` | Pull-request validation |
-| `.github/workflows/publish-mcp.yml` | Registry release validation/publish |
-| `README.md` | Bilingual installation and product documentation |
-| `CHANGELOG.md` | `1.2.0` public release notes |
-| `CONTRIBUTING.md` | Rules for platform integration contributions |
+| File                                                | Responsibility                                   |
+| --------------------------------------------------- | ------------------------------------------------ |
+| `package.json`                                      | Dependency-free validation and test commands     |
+| `scripts/integration-contract.mjs`                  | Reusable repository validation logic             |
+| `scripts/validate-integrations.mjs`                 | CLI wrapper for validation                       |
+| `tests/integration-contract.test.mjs`               | Contract and negative-fixture tests              |
+| `.agents/plugins/marketplace.json`                  | Codex marketplace                                |
+| `.claude-plugin/marketplace.json`                   | Claude/VS Code/Copilot marketplace               |
+| `plugins/maxstat/.codex-plugin/plugin.json`         | Codex plugin metadata                            |
+| `plugins/maxstat/.claude-plugin/plugin.json`        | Claude-compatible metadata                       |
+| `plugins/maxstat/.mcp.json`                         | Claude/VS Code/Copilot MCP configuration         |
+| `plugins/maxstat/skills/maxstat-analytics/SKILL.md` | Shared analytics workflow                        |
+| `gemini-extension.json`                             | Gemini CLI extension and secure token setting    |
+| `GEMINI.md`                                         | Gemini-specific Russian-first operating guidance |
+| `configs/*.json`, `configs/codex.toml`              | Copy-paste client configurations                 |
+| `docs/catalog-submissions.md`                       | Directory submission ledger                      |
+| `assets/*`, `plugins/maxstat/assets/*`              | Marketplace presentation assets                  |
+| `.github/workflows/validate-integrations.yml`       | Pull-request validation                          |
+| `.github/workflows/publish-mcp.yml`                 | Registry release validation/publish              |
+| `README.md`                                         | Bilingual installation and product documentation |
+| `CHANGELOG.md`                                      | `1.2.0` public release notes                     |
+| `CONTRIBUTING.md`                                   | Rules for platform integration contributions     |
 
 ---
 
@@ -135,15 +136,9 @@ test("Authorization bearer configuration is rejected", async (t) => {
 test("missing marketplace source paths are rejected", async (t) => {
   const root = await fixture();
   t.after(() => rm(root, { recursive: true, force: true }));
-  const marketplacePath = path.join(
-    root,
-    ".agents/plugins/marketplace.json",
-  );
+  const marketplacePath = path.join(root, ".agents/plugins/marketplace.json");
   const marketplace = JSON.parse(
-    await (await import("node:fs/promises")).readFile(
-      marketplacePath,
-      "utf8",
-    ),
+    await (await import("node:fs/promises")).readFile(marketplacePath, "utf8"),
   );
   marketplace.plugins[0].source.path = "./plugins/missing";
   await writeFile(marketplacePath, JSON.stringify(marketplace, null, 2));
@@ -210,7 +205,7 @@ export async function validateRepository(rootDir) {}
    `./plugins/maxstat`;
 9. verify `server.json` marks the token header required and secret;
 10. verify the skill contains valid YAML delimiters, `name:
-    maxstat-analytics`, Russian workflow headings, and all 21 tool names;
+maxstat-analytics`, Russian workflow headings, and all 21 tool names;
 11. verify README contains the canonical install commands and does not contain
     the old `--bearer-token-env-var` command.
 
@@ -468,13 +463,7 @@ Create `.claude-plugin/marketplace.json`:
       "homepage": "https://maxstat.ru/promo/mcp",
       "repository": "https://github.com/fbmdata/maxstat-mcp",
       "license": "MIT",
-      "keywords": [
-        "max",
-        "analytics",
-        "channels",
-        "publications",
-        "mcp"
-      ],
+      "keywords": ["max", "analytics", "channels", "publications", "mcp"],
       "category": "data"
     }
   ]
@@ -877,11 +866,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
       - name: Install Claude Code
         run: npm install --global @anthropic-ai/claude-code
       - name: Test integration contracts
@@ -901,11 +890,11 @@ jobs:
 In `.github/workflows/publish-mcp.yml`, add Node setup and run:
 
 ```yaml
-      - name: Test integration contracts
-        run: npm test
+- name: Test integration contracts
+  run: npm test
 
-      - name: Validate integration manifests
-        run: npm run validate
+- name: Validate integration manifests
+  run: npm run validate
 ```
 
 before installing `mcp-publisher`. Extend the tag check to compare the tag
