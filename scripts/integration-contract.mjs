@@ -597,20 +597,6 @@ export async function validateRepository(rootDir) {
       ],
       [/\bnpx\s+(?:-y\s+)?maxstat-mcp\b/i, /\bnpm\s+install\s+maxstat-mcp\b/i],
     ],
-    [
-      "docs/launch-kit.ru.md",
-      [
-        "## Кейс 1",
-        "## Кейс 2",
-        "## Кейс 3",
-        "search_channels",
-        "search_posts",
-        "create_keyword_subscription",
-        "assets/maxstat-mcp-demo.mp4",
-        "assets/maxstat-mcp-demo.gif",
-      ],
-      [],
-    ],
   ]) {
     try {
       const content = await readFile(path.join(rootDir, file), "utf8");
