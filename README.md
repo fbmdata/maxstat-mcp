@@ -1,7 +1,5 @@
 # MaxStat MCP
 
-![Логотип ООО «ФБМ Аналитикс»](assets/maxstat-logo.png)
-
 [![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-4830E6)](https://modelcontextprotocol.io/)
 [![Tools](https://img.shields.io/badge/MCP_tools-21-4830E6)](#все-21-инструмент)
 [![Version](https://img.shields.io/badge/release-1.2.0-4830E6)](CHANGELOG.md)
