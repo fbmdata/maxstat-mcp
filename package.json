@@ -1,6 +1,6 @@
 {
   "name": "maxstat-mcp-integration",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
   "description": "Validation tooling for the public MaxStat MCP integration package.",
   "type": "module",

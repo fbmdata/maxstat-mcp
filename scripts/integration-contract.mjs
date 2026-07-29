@@ -5,7 +5,7 @@ import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 
-export const RELEASE_VERSION = "1.2.1";
+export const RELEASE_VERSION = "1.2.2";
 export const MCP_URL = "https://maxstat.ru/api/mcp";
 export const TOKEN_HEADER = "X-API-Token";
 export const TOKEN_ENV = "MAXSTAT_API_TOKEN";

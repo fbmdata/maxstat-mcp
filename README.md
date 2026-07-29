@@ -2,7 +2,7 @@
 
 [![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-4830E6)](https://modelcontextprotocol.io/)
 [![Tools](https://img.shields.io/badge/MCP_tools-21-4830E6)](#все-21-инструмент)
-[![Version](https://img.shields.io/badge/release-1.2.1-4830E6)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/release-1.2.2-4830E6)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Official MCP Registry](https://img.shields.io/badge/Official_MCP_Registry-live-2EA44F)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.fbmdata%2Fmaxstat-mcp)
 [![Glama](https://img.shields.io/badge/Glama-listed-2EA44F)](https://glama.ai/mcp/connectors/io.github.fbmdata/maxstat-mcp)
@@ -53,14 +53,15 @@ AI-агент подключается к живому индексу канал
 
 ### Проверенный масштаб индекса
 
-| Проверено 28 июля 2026 года |   Живой индекс |
+| Проверено 29 июля 2026 года |   Живой индекс |
 | --------------------------- | -------------: |
-| Каналы MAX                  |    **367 759** |
-| Публикации                  | **85 720 012** |
+| Каналы MAX                  |    **408 501** |
+| Публикации                  | **86 315 758** |
 | Категории каналов           |         **42** |
 | MCP-инструменты             |         **21** |
 
-Индекс постоянно растёт. Используйте `search_channels`, `search_posts` и
+Это показатели production на `maxstat.ru`, а не staging-окружения. Индекс
+постоянно растёт. Используйте `search_channels`, `search_posts` и
 `get_categories`, чтобы получить актуальные результаты.
 
 ### Быстрый старт
@@ -279,14 +280,15 @@ Webhook должен быть доступен по публичному HTTPS-�
 
 ### Пример на реальных данных
 
-Проверочный запрос 28 июля 2026 года вернул:
+Проверочный запрос к production 29 июля 2026 года вернул:
 
-- канал **MAX • Анонсы** с аудиторией 3 446 649 подписчиков;
-- рост с 3 040 777 до 3 446 649 с 29 июня по 28 июля:
-  **+405 872 / +13,3%**;
-- публикацию с **17 719 253 просмотрами** и **185 992 реакциями**;
+- канал **MAX • Анонсы** с аудиторией 3 496 789 подписчиков;
+- рост с 3 054 001 до 3 496 789 с 30 июня по 29 июля:
+  **+442 788 / +14,5%**;
+- [публикацию](https://max.ru/max_news/AZ70lsF7P0s) с
+  **17 888 688 просмотрами** и **187 460 реакциями**;
 - разбивку реакций, дневные истории просмотров и реакций;
-- список найденных пересылок.
+- 184 найденных пересылки.
 
 Значения показывают структуру реального ответа и не являются обещанием
 фиксированных показателей продукта.
@@ -334,6 +336,8 @@ MaxStat MCP gives AI agents structured access to the live MAX messenger channel
 and publication index. It supports channel and post discovery, daily audience,
 view and reaction histories, publishing activity, attachment and reaction
 details, forward detection, webhook monitoring, and account credit usage.
+The production index was verified on July 29, 2026 with 408,501 channels,
+86,315,758 posts, 42 channel categories, and 21 MCP tools.
 
 ### Connection
 

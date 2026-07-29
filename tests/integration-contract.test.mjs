@@ -51,6 +51,25 @@ test("the checked-in repository satisfies every integration invariant", async ()
   assert.deepEqual(await validateRepository(repoRoot), []);
 });
 
+test("the README uses the production index snapshot instead of staging data", async () => {
+  const readme = await readFile(path.join(repoRoot, "README.md"), "utf8");
+
+  assert.match(readme, /Проверено 29 июля 2026 года/);
+  assert.match(readme, /\*\*408 501\*\*/);
+  assert.match(readme, /\*\*86 315 758\*\*/);
+  assert.doesNotMatch(readme, /367 759|85 720 012/);
+});
+
+test("the real-data example is refreshed from production", async () => {
+  const readme = await readFile(path.join(repoRoot, "README.md"), "utf8");
+
+  assert.match(readme, /3 496 789 подписчиков/);
+  assert.match(readme, /\+442 788 \/ \+14,5%/);
+  assert.match(readme, /17 888 688 просмотрами/);
+  assert.match(readme, /187 460 реакциями/);
+  assert.match(readme, /184 найденных пересылк/);
+});
+
 test("readJson reads a repository-relative JSON document", async () => {
   const { readJson } = await loadValidator();
   const server = await readJson(repoRoot, "server.json");
@@ -195,7 +214,7 @@ test("release-bearing manifests must use the same version", async (t) => {
   assert(
     errors.some(
       (error) =>
-        error.includes("gemini-extension.json") && error.includes("1.2.1"),
+        error.includes("gemini-extension.json") && error.includes("1.2.2"),
     ),
   );
 });

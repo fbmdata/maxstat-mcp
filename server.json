@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.fbmdata/maxstat-mcp",
   "title": "MaxStat MCP",
-  "description": "MAX channel and post search, metric histories, reactions, forwards, webhooks and account usage.",
-  "version": "1.2.1",
+  "description": "Search 408K+ MAX channels and 86M+ posts; metrics, reactions, forwards, webhooks and usage.",
+  "version": "1.2.2",
   "websiteUrl": "https://maxstat.ru/promo/mcp",
   "repository": {
     "url": "https://github.com/fbmdata/maxstat-mcp",
