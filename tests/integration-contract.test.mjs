@@ -214,7 +214,7 @@ test("release-bearing manifests must use the same version", async (t) => {
   assert(
     errors.some(
       (error) =>
-        error.includes("gemini-extension.json") && error.includes("1.2.2"),
+        error.includes("gemini-extension.json") && error.includes("1.2.3"),
     ),
   );
 });
@@ -292,6 +292,7 @@ test("Cline can install the hosted server from the agent guide", async () => {
 });
 
 test("the Cline icon and public demo are tracked and valid", async () => {
+  const { gifMetadata } = await loadValidator();
   const clineIcon = await readFile(
     path.join(repoRoot, "assets/maxstat-cline-400.png"),
   );
@@ -302,7 +303,41 @@ test("the Cline icon and public demo are tracked and valid", async () => {
   const demo = await readFile(
     path.join(repoRoot, "assets/maxstat-mcp-demo.gif"),
   );
-  assert(demo.length > 1024, "assets/maxstat-mcp-demo.gif must not be empty");
+  const metadata = gifMetadata(demo);
+  assert.deepEqual(
+    { width: metadata.width, height: metadata.height },
+    { width: 960, height: 540 },
+  );
+  assert(
+    metadata.frameCount >= 120,
+    "assets/maxstat-mcp-demo.gif must contain a complete animation",
+  );
+  assert(
+    metadata.durationMs >= 10_000 && metadata.durationMs <= 16_000,
+    "assets/maxstat-mcp-demo.gif must run for 10–16 seconds",
+  );
+  assert(
+    demo.length <= 3 * 1024 * 1024,
+    "assets/maxstat-mcp-demo.gif must stay within 3 MiB",
+  );
+});
+
+test("the integration validator rejects a malformed public demo", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  await writeFile(
+    path.join(root, "assets/maxstat-mcp-demo.gif"),
+    Buffer.from("not a gif"),
+  );
+
+  const errors = await validateRepository(root);
+  assert(
+    errors.some(
+      (error) =>
+        error.includes("assets/maxstat-mcp-demo.gif") &&
+        error.includes("valid GIF"),
+    ),
+  );
 });
 
 test("the public package excludes internal and redundant files", async () => {

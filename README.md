@@ -2,7 +2,7 @@
 
 [![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-4830E6)](https://modelcontextprotocol.io/)
 [![Tools](https://img.shields.io/badge/MCP_tools-21-4830E6)](#все-21-инструмент)
-[![Version](https://img.shields.io/badge/release-1.2.2-4830E6)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/release-1.2.3-4830E6)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Official MCP Registry](https://img.shields.io/badge/Official_MCP_Registry-live-2EA44F)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.fbmdata%2Fmaxstat-mcp)
 [![Glama](https://img.shields.io/badge/Glama-listed-2EA44F)](https://glama.ai/mcp/connectors/io.github.fbmdata/maxstat-mcp)

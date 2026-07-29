@@ -1,6 +1,6 @@
 {
   "name": "maxstat-mcp",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Аналитика каналов и публикаций MAX / MAX channel and publication analytics.",
   "settings": [
     {

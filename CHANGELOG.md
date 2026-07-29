@@ -3,6 +3,18 @@
 All notable public changes to the MaxStat MCP integration will be documented in
 this file.
 
+## [1.2.3] - 2026-07-29
+
+### Changed
+
+- Rebuilt the public demo as a concise Russian-first product walkthrough with
+  evergreen index scale, clearer MCP capabilities, and a focused connection
+  call to action.
+- Reduced the demo from 34 to 15 seconds and improved its layout for GitHub and
+  advertising previews.
+- Added automated validation for GIF dimensions, duration, frame count, file
+  size, and structural integrity.
+
 ## [1.2.2] - 2026-07-29
 
 ### Changed
