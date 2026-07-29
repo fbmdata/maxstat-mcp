@@ -3,7 +3,7 @@
   "name": "io.github.fbmdata/maxstat-mcp",
   "title": "MaxStat MCP",
   "description": "Search 408K+ MAX channels and 86M+ posts; metrics, reactions, forwards, webhooks and usage.",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "websiteUrl": "https://maxstat.ru/promo/mcp",
   "repository": {
     "url": "https://github.com/fbmdata/maxstat-mcp",
