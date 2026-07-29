@@ -3,6 +3,17 @@
 All notable public changes to the MaxStat MCP integration will be documented in
 this file.
 
+## [1.2.2] - 2026-07-29
+
+### Changed
+
+- Replaced staging-derived index figures with a verified production snapshot:
+  408,501 channels and 86,315,758 posts.
+- Refreshed the real-data example from production, including audience growth,
+  post engagement, and detected forwards.
+- Added regression coverage that prevents staging figures from returning to the
+  public README.
+
 ## [1.2.1] - 2026-07-29
 
 ### Changed
