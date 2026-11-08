@@ -17,6 +17,7 @@
 [Получить бесплатный API-токен](https://maxstat.ru/dashboard/api) ·
 [Подключить MaxStat MCP](#быстрый-старт) ·
 [Посмотреть все 15 инструментов](#инструменты-mcp) ·
+[Что нового в MaxStat](UPDATES.md) ·
 [Инструкция для AI-установщика](llms-install.md)
 
 ![Демонстрация MaxStat MCP](assets/maxstat-mcp-demo.gif)
@@ -27,6 +28,15 @@
 > исходным кодом.
 
 ## Русский
+
+### Что нового
+
+**Мониторинг и уведомления.** Отслеживайте каналы и ключевые фразы в публикациях
+и комментариях MAX. Получайте события в MAX, Telegram или на Webhook.
+Настройка — в [личном кабинете](https://maxstat.ru/dashboard/monitoring).
+
+[Новости сервиса, API и MCP](UPDATES.md) · [Версии интеграции](CHANGELOG.md).
+Доступность разделов проверена 8 ноября 2026 года.
 
 ### Возможности
 
@@ -335,10 +345,13 @@ MCP-клиент может оборачивать эту ошибку в рез
 
 Webhook необязателен для сохранения событий в истории. Для отправки на ваш
 сервер нужен публичный HTTPS-адрес с действительным сертификатом.
-Если в кабинете есть раздел «Уведомления», добавьте там получателя и выберите
-его в мониторинге. Один Webhook можно использовать в нескольких мониторингах.
+Добавьте получателя в разделе
+[«Уведомления»](https://maxstat.ru/dashboard/notifications) и выберите его
+в мониторинге. Доступны личные чаты, группы и каналы MAX и Telegram, а также
+Webhook. Один Webhook можно использовать в нескольких мониторингах.
 В одном мониторинге можно выбрать не больше одного получателя каждого типа.
-Доступность MAX и Telegram проверяйте в разделе «Уведомления» своего кабинета.
+Для мессенджеров действуют отдельные лимиты на получателя: до 10 сообщений
+в минуту и 100 событий мониторинга в сутки по Москве.
 
 Webhook-получатель должен ответить 2xx за 5 секунд. Перенаправления не
 выполняются, автоматических повторов доставки нет. Сохраняйте событие в очередь
@@ -403,6 +416,15 @@ MCP входит во все [тарифы MaxStat API](https://maxstat.ru/promo
 [`SECURITY.md`](SECURITY.md).
 
 ## English
+
+### What's new
+
+**Monitoring and notifications.** Track channels and keyword matches in MAX
+posts and comments. Receive events in MAX, Telegram, or through a webhook.
+Configure them in the [dashboard](https://maxstat.ru/dashboard/monitoring).
+
+[Service, API, and MCP news](UPDATES.md) (Russian) · [Integration versions](CHANGELOG.md).
+Dashboard sections checked on November 8, 2026.
 
 MaxStat MCP gives AI agents structured access to the live MAX messenger channel
 and publication index. It supports channel and post discovery, daily audience,
@@ -490,10 +512,12 @@ A query covering 80 channels takes one slot; collecting every new post from
 80 channels takes 80 monitors and active slots. Each monitor records up to
 1,000 events per Moscow calendar day; history is retained for 90 days.
 
-Webhook delivery needs a public HTTPS endpoint. If your dashboard includes
-Notifications, add a recipient there and select it in the monitor. One webhook
+Webhook delivery needs a public HTTPS endpoint. Add a recipient in
+[Notifications](https://maxstat.ru/dashboard/notifications) and select it in
+the monitor. MAX and Telegram support private chats, groups, and channels.
+Messenger delivery is limited to 10 messages per minute and 100 monitoring
+events per Moscow calendar day per recipient. One webhook
 can serve several monitors, with at most one recipient of each type per monitor.
-Check this section of your dashboard for MAX and Telegram delivery options.
 Respond with 2xx within five seconds; redirects and automatic delivery retries
 are not supported. Deduplicate by `event_id`. A webhook is disabled after ten
 consecutive failures without a success for 24 hours; a successful dashboard

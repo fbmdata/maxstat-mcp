@@ -1,7 +1,7 @@
 # Changelog
 
 All notable public changes to the MaxStat MCP integration will be documented in
-this file.
+this file. Service and public API news are in [MaxStat updates](UPDATES.md) (Russian).
 
 ## [Unreleased]
 
@@ -13,6 +13,9 @@ this file.
 
 ### Added
 
+- A service, public API, and MCP news log, linked from README.
+- Dashboard-verified MAX, Telegram, and Webhook notification guidance, including
+  separate messenger delivery limits.
 - A repeatable counter refresh with a dated browser-HTML import when the public
   page requires a CAPTCHA. Failed reads and renders preserve the previous files.
 - A portable demo renderer and checks that README and GIF statistics match
