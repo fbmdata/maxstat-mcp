@@ -28,11 +28,10 @@
 
 ## Русский
 
-### Что именно можно получить через MaxStat MCP
+### Возможности
 
-AI-агент подключается к живому индексу каналов и публикаций MAX и получает
-структурированные данные, а не фрагменты поисковой выдачи или вручную собранные
-скриншоты.
+MaxStat MCP возвращает карточки каналов и публикаций MAX, историю показателей,
+результаты поиска и данные о расходе кредитов.
 
 | Область             | Какие данные возвращает MCP                                                                                                                 |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -54,18 +53,17 @@ AI-агент подключается к живому индексу канал
 [личном кабинете](https://maxstat.ru/dashboard/monitoring), через MCP они не
 управляются. Подробнее — [Мониторинг в личном кабинете](#мониторинг-в-личном-кабинете).
 
-### Проверенный масштаб индекса
+### Размер индекса
 
-| Проверено 29 июля 2026 года |   Живой индекс |
+| Проверено 29 июля 2026 года |   Срез индекса |
 | --------------------------- | -------------: |
 | Каналы MAX                  |    **408 501** |
 | Публикации                  | **86 315 758** |
 | Категории каналов           |         **42** |
 
-Это исторический срез production на `maxstat.ru` за 29 июля, а не текущие
-счётчики. Используйте `search_channels`, `search_posts` и `get_categories`,
-чтобы получить актуальные результаты. Контракт из **15 инструментов** и цены
-вызовов сверены 8 ноября 2026 года с
+Данные относятся к 29 июля 2026 года. Текущие результаты доступны через
+`search_channels`, `search_posts` и `get_categories`.
+Список **15 инструментов** и стоимость вызовов сверены 8 ноября 2026 года с
 [публичной OpenAPI-схемой](https://maxstat.ru/api/openapi.json).
 
 ### Быстрый старт
@@ -278,11 +276,11 @@ Desktop.
 - ID каналов и публикаций передаются строками, включая отрицательные ID.
   Не преобразуйте их в JavaScript `Number`: возможна потеря точности.
 - В поиске `limit` — от 1 до 100, `offset` — от 0; `offset + limit` не больше
-  10 000. Большой результат разбивайте фильтрами, а не углубляйте пагинацию.
+  10 000. Для больших выборок уточняйте фильтры.
 - `search_channels` сортирует по `subscribers`, `posts`, `date` или `score`.
   Для рейтинга по росту сначала получите кандидатов, затем запросите
-  `get_channel_subscribers` за один период и отсортируйте их сами. Это рейтинг
-  выбранной выборки, если весь подходящий каталог не исследован.
+  `get_channel_subscribers` за один период и отсортируйте их сами. Рейтинг
+  относится только к проверенным каналам.
 - Даты `date_from` и `date_to` задаются как `YYYY-MM-DD`, обе границы включены.
   Истории каналов без дат используют последние 30 дней. Задавайте обе даты
   явно для сравнения; отсутствие снимков не означает нулевую аудиторию.
@@ -313,8 +311,7 @@ MCP-клиент может оборачивать эту ошибку в рез
 При обращении в поддержку передайте `request_id`, без API-токена.
 При `Unknown tool` обновите список инструментов в клиенте. Старые
 `create_channel_subscription`, `create_keyword_subscription`, `get_subscriptions`,
-`get_subscription`, `update_subscription` и `delete_subscription` удалены;
-смена тарифа не возвращает их.
+`get_subscription`, `update_subscription` и `delete_subscription` удалены.
 
 ### Мониторинг в личном кабинете
 
@@ -331,16 +328,13 @@ MCP-клиент может оборачивать эту ошибку в рез
 - Для всех новых публикаций каждого из 50–100 каналов нужны 50–100 отдельных
   отслеживаний и столько же активных мест.
 - Для каждого отслеживания действует лимит **1 000 событий в сутки по Москве**.
-  Это лимит событий, а не число Webhook-адресов. Прежние цены доставки
-  «2/3 кредита за событие» к текущей модели мониторинга не относятся.
 
 Webhook необязателен для сохранения событий в истории. Для отправки на ваш
 сервер нужен публичный HTTPS-адрес с действительным сертификатом.
-В актуальном коде получатели подключаются в разделе «Уведомления», затем
-выбираются в мониторинге: Webhook, MAX или Telegram, не больше одного каждого
-типа. Один Webhook может обслуживать несколько мониторингов. Доступные способы
-доставки проверяйте в своём кабинете; наличие кода не подтверждает включение
-нового способа в работающем сервисе.
+Если в кабинете есть раздел «Уведомления», добавьте там получателя и выберите
+его в мониторинге. Один Webhook можно использовать в нескольких мониторингах.
+В одном мониторинге можно выбрать не больше одного получателя каждого типа.
+Доступность MAX и Telegram проверяйте в разделе «Уведомления» своего кабинета.
 
 Webhook-получатель должен ответить 2xx за 5 секунд. Перенаправления не
 выполняются, автоматических повторов доставки нет. Сохраняйте событие в очередь
@@ -349,9 +343,8 @@ Webhook-получатель должен ответить 2xx за 5 секун
 «Проверить» в «Уведомлениях» включает его снова.
 
 Мониторинг собирает новые совпадения после создания или изменения условий,
-исторические публикации не догоняет. История хранится 90 дней. Доставку и
-полноту сбора нельзя гарантировать по одной настройке: проверяйте получателя,
-историю событий и лимиты в кабинете. Актуальную стоимость мест смотрите там же.
+исторические публикации не догоняет. История хранится 90 дней. Состояние
+получателя, историю событий, лимиты и стоимость мест смотрите в кабинете.
 
 ### Пример на реальных данных
 
@@ -478,8 +471,7 @@ Use `get_post` with `include_forwards=true` to request detected forwards.
 ### Monitoring and webhooks
 
 Monitoring is configured in the [dashboard](https://maxstat.ru/dashboard/monitoring),
-outside MCP. The six old webhook-subscription tools have been removed; an
-`Unknown tool` response is not resolved by buying a different plan.
+outside MCP. The six old webhook-subscription tools have been removed.
 `get_account_subscription` remains available for billing information.
 
 An active paid plan includes one monitoring slot; extra slots are purchased
@@ -489,11 +481,10 @@ A query covering 80 channels takes one slot; collecting every new post from
 80 channels takes 80 monitors and active slots. Each monitor records up to
 1,000 events per Moscow calendar day; history is retained for 90 days.
 
-Webhook delivery needs a public HTTPS endpoint. Current source code manages
-recipients in the dashboard's Notifications section and selects them in each
-monitor; one webhook can serve several monitors. MAX and Telegram recipients
-are also present in the source; check your dashboard for enabled delivery
-methods. This does not establish their deployment status.
+Webhook delivery needs a public HTTPS endpoint. If your dashboard includes
+Notifications, add a recipient there and select it in the monitor. One webhook
+can serve several monitors, with at most one recipient of each type per monitor.
+Check this section of your dashboard for MAX and Telegram delivery options.
 Respond with 2xx within five seconds; redirects and automatic delivery retries
 are not supported. Deduplicate by `event_id`. A webhook is disabled after ten
 consecutive failures without a success for 24 hours; a successful dashboard
