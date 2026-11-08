@@ -2,4 +2,4 @@ blank_issues_enabled: false
 contact_links:
   - name: Сообщить об уязвимости
     url: https://github.com/fbmdata/maxstat-mcp/security/policy
-    about: Не публикуйте сведения об уязвимостях в открытых issue.
+    about: Отправьте сообщение по инструкции безопасности. Не описывайте уязвимость в открытом issue.

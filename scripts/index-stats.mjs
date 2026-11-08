@@ -48,13 +48,13 @@ function date(snapshot, language) {
 function block(snapshot, language) {
   const format = (value) => new Intl.NumberFormat(language).format(value).replace(/[\u00a0\u202f]/g, " ");
   if (language === "en-US") {
-    return `Checked ${date(snapshot, language)}: **${format(snapshot.channels)} channels**,\n` +
+    return `As of ${date(snapshot, language)}: **${format(snapshot.channels)} channels**,\n` +
       `**${format(snapshot.posts)} posts**, **${format(snapshot.categories)} categories**.\n` +
       `[Source: MaxStat](${INDEX_SOURCE}).\n`;
   }
-  const checked = date(snapshot, language).replace(/\s*г\.$/u, " года");
+  const asOf = date(snapshot, language).replace(/\s*г\.$/u, " года");
   const rows = [
-    [`Проверено ${checked}`, "Всего"],
+    [`На ${asOf}`, "Всего"],
     ["Каналы MAX", `**${format(snapshot.channels)}**`],
     ["Публикации", `**${format(snapshot.posts)}**`],
     ["Категории", `**${format(snapshot.categories)}**`],

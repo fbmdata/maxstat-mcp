@@ -1,15 +1,15 @@
 # Install MaxStat MCP
 
-Use this file when an AI agent or Cline is asked to install MaxStat MCP.
+Follow these steps when installing MaxStat MCP for an AI agent or Cline.
 
-MaxStat is a hosted Streamable HTTP server. Do not clone, build, or run a local
-package. There is no `maxstat-mcp` npm executable.
+MaxStat runs as a hosted Streamable HTTP server. Connect to its URL; no local
+clone, build, or package is needed. There is no `maxstat-mcp` npm executable.
 
 ## Prerequisites
 
 1. Create an API token in <https://maxstat.ru/dashboard/api>.
 2. Store it in the `MAXSTAT_API_TOKEN` environment variable.
-3. Never print the token, paste it into chat, or commit it to a repository.
+3. Keep the token out of logs, chat messages, and repository files.
 
 ## Cline configuration
 
@@ -30,43 +30,43 @@ Add this server to Cline's MCP settings:
 }
 ```
 
-Cline expands `${env:MAXSTAT_API_TOKEN}` locally before connecting. Keep the
-placeholder in the settings file and supply the real value through the process
-environment.
+Cline reads `${env:MAXSTAT_API_TOKEN}` from its process environment before
+connecting. Keep the placeholder in settings and set the token locally.
 
-For the Cline CLI, the interactive equivalent is:
+For interactive installation with the Cline CLI, run:
 
 ```bash
 cline mcp install maxstat --transport http https://maxstat.ru/api/mcp
 ```
 
 Choose **Static headers** and enter `X-API-Token` with the local token value.
-For a reusable setup, prefer the environment-backed JSON above.
+Use the JSON configuration above to keep the token in an environment variable.
 
 ## Verification
 
-After reconnecting, verify all of the following:
+Reconnect, then check:
 
-1. The MCP initialization handshake succeeds with a protocol version supported
-   by both client and server.
-2. `tools/list` returns the 15 MaxStat tools listed in the
-   [tool reference](README.md#инструменты-mcp); compare names as well as count.
-3. The read-only `get_account_limits` call returns the current account limits.
-4. `get_categories` returns the live MAX channel categories.
+1. MCP initialization succeeds with a protocol version that both client
+   and server support.
+2. `tools/list` returns the 15 MaxStat tools in the
+   [tool reference](README.md#инструменты-mcp). Compare their names, not just the count.
+3. The read-only `get_account_limits` call returns your account limits.
+4. `get_categories` returns the current MAX channel categories.
 
-If the server returns `401`, check that the header name is exactly
-`X-API-Token` and that the local token is valid. The supplied configurations
-use that header; keep it when installing from these examples.
+For `401` errors, check the token and the exact header name: `X-API-Token`.
+Keep this header when using the supplied configurations.
 
-If an old webhook-subscription call returns `Unknown tool`, refresh the client's
-tool list. Those six operations were removed. `get_account_subscription` is
-still supported and reports billing information.
+For `Unknown tool` errors from old webhook-subscription calls, refresh the
+client's tool list and remove those calls. The six subscription operations
+were removed. `get_account_subscription` still returns billing information.
 
 ## What the connection provides
 
-The tools cover MAX channel and post search, channel cards, subscriber/view/
-reaction/activity history, post metrics, detected reposts, and account credit
-usage. Monitoring and webhooks are configured separately in the
-[dashboard](https://maxstat.ru/dashboard/monitoring), outside MCP. Adding a
-channel with `add_channel` does not create a monitor. The full reference is in
-[README.md](README.md#инструменты-mcp).
+Search MAX channels and posts, read channel profiles, track subscribers,
+views, reactions, and publishing activity, inspect post metrics and detected
+reposts, and check account credit usage.
+
+Set up monitoring and webhooks separately in the
+[dashboard](https://maxstat.ru/dashboard/monitoring). They are outside MCP.
+Calling `add_channel` queues a channel for collection; it does not create a monitor.
+See the [full tool reference](README.md#инструменты-mcp).

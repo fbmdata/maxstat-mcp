@@ -1,6 +1,6 @@
 {
   "name": "maxstat-plugins",
-  "description": "Аналитика каналов и публикаций MAX от ООО «ФБМ Аналитикс».",
+  "description": "Поиск каналов и публикаций MAX, аудитория, просмотры и реакции.",
   "version": "1.2.4",
   "owner": {
     "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
@@ -11,7 +11,7 @@
     {
       "name": "maxstat",
       "source": "./plugins/maxstat",
-      "description": "Поиск и аналитика каналов и публикаций MAX.",
+      "description": "Поиск каналов и публикаций MAX, сравнение аудитории, просмотров и реакций.",
       "author": {
         "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
         "email": "info@fbmdata.ru",

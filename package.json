@@ -2,7 +2,7 @@
   "name": "maxstat-mcp-integration",
   "version": "1.2.4",
   "private": true,
-  "description": "Validation tooling for the public MaxStat MCP integration package.",
+  "description": "Check MaxStat MCP manifests, client settings, documentation and media.",
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",

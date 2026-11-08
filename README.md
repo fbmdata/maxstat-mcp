@@ -7,25 +7,22 @@
 [![Official MCP Registry](https://img.shields.io/badge/Official_MCP_Registry-live-2EA44F)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.fbmdata%2Fmaxstat-mcp)
 [![Glama](https://img.shields.io/badge/Glama-listed-2EA44F)](https://glama.ai/mcp/connectors/io.github.fbmdata/maxstat-mcp)
 
-**Официальный удалённый MCP-сервер MaxStat для поиска и аналитики
-каналов и публикаций в мессенджере MAX.**
+**Поиск и аналитика каналов и публикаций MAX в вашем AI-клиенте.**
 
 Разработчик и оператор: **ООО «ФБМ Аналитикс» / FBM Analytics**.
 
 [Русский](#русский) · [English](#english)
 
-[Получить бесплатный API-токен](https://maxstat.ru/dashboard/api) ·
+[Получить API-токен](https://maxstat.ru/dashboard/api) ·
 [Подключить MaxStat MCP](#быстрый-старт) ·
-[Посмотреть все 15 инструментов](#инструменты-mcp) ·
+[15 инструментов MCP](#инструменты-mcp) ·
 [Что нового в MaxStat](UPDATES.md) ·
-[Инструкция для AI-установщика](llms-install.md)
+[Установка через AI-агента](llms-install.md)
 
 ![Демонстрация MaxStat MCP](assets/maxstat-mcp-demo.gif)
 
-> MaxStat размещает и обслуживает MCP-сервер. В репозитории опубликованы
-> манифесты, плагины, аналитический skill, клиентские конфигурации и
-> документация. Серверная реализация и данные MaxStat не являются открытым
-> исходным кодом.
+> Сервер работает на MaxStat. Здесь — плагины, skill, настройки подключения
+> и документация. Исходный код сервера и базы данных закрыты.
 
 ## Русский
 
@@ -36,12 +33,8 @@
 Настройка — в [личном кабинете](https://maxstat.ru/dashboard/monitoring).
 
 [Новости сервиса, API и MCP](UPDATES.md) · [Версии интеграции](CHANGELOG.md).
-Доступность разделов проверена 8 ноября 2026 года.
 
 ### Возможности
-
-MaxStat MCP возвращает карточки каналов и публикаций MAX, историю показателей,
-результаты поиска и данные о расходе кредитов.
 
 | Область             | Какие данные возвращает MCP                                                                                                                 |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -56,29 +49,26 @@ MaxStat MCP возвращает карточки каналов и публик
 | Пересылки           | Найденные репосты, их URL, даты и ID каналов назначения                                                                                     |
 | Тариф и расход      | Статус тарифа, период, включённые, купленные, использованные и оставшиеся кредиты и история списаний                                        |
 
-Также можно добавить публичный или доступный по приглашению канал MAX в очередь
-сбора данных MaxStat. Это не создаёт мониторинг или Webhook.
+`add_channel` добавляет публичный или доступный по приглашению канал в очередь
+сбора данных MaxStat.
 
-Мониторинг и Webhook настраиваются отдельно в
-[личном кабинете](https://maxstat.ru/dashboard/monitoring), через MCP они не
-управляются. Подробнее — [Мониторинг в личном кабинете](#мониторинг-в-личном-кабинете).
+Мониторинг и Webhook настраиваются в
+[личном кабинете](https://maxstat.ru/dashboard/monitoring). Через MCP они
+недоступны. [Как настроить мониторинг](#мониторинг-в-личном-кабинете).
 
 ### Размер индекса
 
 <!-- maxstat:index:ru:start -->
 
-| Проверено 8 ноября 2026 года |           Всего |
-| ---------------------------- | --------------: |
-| Каналы MAX                   |     **672 837** |
-| Публикации                   | **155 837 316** |
-| Категории                    |          **42** |
+| На 8 ноября 2026 года |           Всего |
+| --------------------- | --------------: |
+| Каналы MAX            |     **672 837** |
+| Публикации            | **155 837 316** |
+| Категории             |          **42** |
 
 [Источник: MaxStat](https://maxstat.ru/service).
 
 <!-- maxstat:index:ru:end -->
-
-Список **15 инструментов** и стоимость вызовов сверены 8 ноября 2026 года с
-[публичной OpenAPI-схемой](https://maxstat.ru/api/openapi.json).
 
 ### Быстрый старт
 
@@ -127,10 +117,8 @@ codex plugin marketplace add fbmdata/maxstat-mcp
 codex plugin add maxstat@maxstat-plugins
 ```
 
-Плагин подключает MCP с пользовательским заголовком `X-API-Token`.
-Все конфигурации в этом репозитории используют этот заголовок. Сервер также
-принимает `Authorization: Bearer <API_TOKEN>`; при установке по готовым
-конфигурациям сохраняйте их способ передачи токена.
+Готовые конфигурации передают токен в заголовке `X-API-Token`.
+При ручной настройке можно также использовать `Authorization: Bearer <API_TOKEN>`.
 
 Для прямой установки без плагина объедините
 [`configs/codex.toml`](configs/codex.toml) со своим
@@ -165,8 +153,8 @@ claude plugin install maxstat@maxstat-plugins
 
 Откройте Extensions, найдите `@agentPlugins`, выберите `MaxStat MCP` и нажмите
 Install. Для прямого подключения скопируйте
-[`configs/vscode.json`](configs/vscode.json) в `.vscode/mcp.json`: VS Code
-безопасно запросит токен через password input.
+[`configs/vscode.json`](configs/vscode.json) в `.vscode/mcp.json`.
+VS Code запросит токен в поле пароля.
 
 #### GitHub Copilot CLI
 
@@ -176,8 +164,7 @@ copilot plugin marketplace add fbmdata/maxstat-mcp
 copilot plugin install maxstat@maxstat-plugins
 ```
 
-Claude Code, VS Code и GitHub Copilot CLI используют один совместимый плагин,
-skill и MCP-конфигурацию.
+Claude Code, VS Code и GitHub Copilot CLI используют один плагин и skill.
 
 #### Gemini CLI
 
@@ -185,9 +172,8 @@ skill и MCP-конфигурацию.
 gemini extensions install https://github.com/fbmdata/maxstat-mcp
 ```
 
-Расширение запросит `MAXSTAT_API_TOKEN` как чувствительную настройку и подключит
-его к заголовку `X-API-Token`. Инструкции Gemini находятся в
-[`GEMINI.md`](GEMINI.md).
+Расширение запросит токен и сохранит его как секретную настройку
+`MAXSTAT_API_TOKEN`. Инструкции для Gemini — в [`GEMINI.md`](GEMINI.md).
 
 #### Cursor
 
@@ -200,32 +186,29 @@ gemini extensions install https://github.com/fbmdata/maxstat-mcp
 #### Cline
 
 Задайте `MAXSTAT_API_TOKEN` до запуска Cline и передайте агенту
-[`llms-install.md`](llms-install.md). Файл содержит конфигурацию удалённого
-Streamable HTTP-сервера и проверку подключения. Локальный npm-пакет не нужен:
-MaxStat размещает и обслуживает сервер на `https://maxstat.ru/api/mcp`.
+[`llms-install.md`](llms-install.md). Он настроит подключение к
+`https://maxstat.ru/api/mcp` и проверит список инструментов.
 
 #### Windsurf
 
 Задайте `MAXSTAT_API_TOKEN` до запуска Windsurf и объедините
 [`configs/windsurf.json`](configs/windsurf.json) с
-`~/.codeium/windsurf/mcp_config.json`. Конфигурация использует нативную
-подстановку `${env:MAXSTAT_API_TOKEN}`.
+`~/.codeium/windsurf/mcp_config.json`. Токен подставляется из
+`${env:MAXSTAT_API_TOKEN}`.
 
 #### JetBrains AI Assistant
 
 Откройте **Settings → Tools → AI Assistant → Model Context Protocol (MCP)**,
 добавьте HTTP-конфигурацию из
-[`configs/jetbrains.json`](configs/jetbrains.json) и замените `<API_TOKEN>`
-локально в IDE. JetBrains пока не документирует подстановку переменной
-окружения в MCP headers, поэтому placeholder оставлен намеренно.
+[`configs/jetbrains.json`](configs/jetbrains.json). Вставьте свой токен вместо
+`<API_TOKEN>` в настройках IDE.
 
 #### Claude Desktop
 
-Облачный custom connector Claude не принимает произвольный пользовательский
-`X-API-Token`. До внедрения OAuth 2.1 используйте локальный мост из
-[`configs/claude-desktop.json`](configs/claude-desktop.json). Требуются
-Node.js и npm; токен сохраняется только в локальной конфигурации Claude
-Desktop.
+Для Claude Desktop используйте локальный мост из
+[`configs/claude-desktop.json`](configs/claude-desktop.json).
+Нужны Node.js и npm. Токен хранится в локальных настройках Claude Desktop.
+Облачному коннектору нужен OAuth 2.1, который MaxStat пока не поддерживает.
 
 #### Универсальная конфигурация
 
@@ -247,18 +230,17 @@ Desktop.
 
 ### Инструменты MCP
 
-Сервер предоставляет **15 инструментов**. `get_account_subscription` возвращает
-тариф аккаунта; он не управляет мониторингом или Webhook-подписками.
+Вызовы оплачиваются кредитами. Цены — в таблицах ниже.
 
 #### Поиск и каталог
 
 | Инструмент        | Что возвращает или делает                                        |   Кредиты |
 | ----------------- | ---------------------------------------------------------------- | --------: |
-| `get_categories`  | Категории и актуальное количество каналов в каждой категории     | Бесплатно |
-| `search_channels` | Отфильтрованные, отсортированные и постраничные карточки каналов |         3 |
-| `get_channel`     | Полная карточка одного канала по идентификатору                  |         1 |
-| `add_channel`     | Добавляет публичный или invite-only канал в очередь              | Бесплатно |
-| `search_posts`    | Отфильтрованные, отсортированные и постраничные публикации       |         3 |
+| `get_categories`  | Категории и число каналов в каждой                               | Бесплатно |
+| `search_channels` | Каналы по фильтрам; сортировка и разбивка на страницы            |         3 |
+| `get_channel`     | Карточка канала по ID                                            |         1 |
+| `add_channel`     | Добавляет публичный или доступный по приглашению канал в очередь | Бесплатно |
+| `search_posts`    | Публикации по фильтрам; сортировка и разбивка на страницы        |         3 |
 
 #### Аналитика каналов
 
@@ -271,11 +253,11 @@ Desktop.
 
 #### Аналитика публикаций
 
-| Инструмент       | Что возвращает                                                     | Кредиты |
-| ---------------- | ------------------------------------------------------------------ | ------: |
-| `get_post`       | Контент, вложения, метрики, источник пересылки и найденные репосты |       1 |
-| `get_post_views` | Текущее число просмотров и дневную историю                         |       5 |
-| `get_post_likes` | Общее число реакций, разбивку по типам и дневную историю           |       5 |
+| Инструмент       | Что возвращает                                                      | Кредиты |
+| ---------------- | ------------------------------------------------------------------- | ------: |
+| `get_post`       | Текст, вложения, показатели, источник пересылки и найденные репосты |       1 |
+| `get_post_views` | Текущее число просмотров и дневную историю                          |       5 |
+| `get_post_likes` | Общее число реакций, разбивку по типам и дневную историю            |       5 |
 
 #### Тариф и использование
 
@@ -294,7 +276,7 @@ Desktop.
 - `search_channels` сортирует по `subscribers`, `posts`, `date` или `score`.
   Для рейтинга по росту сначала получите кандидатов, затем запросите
   `get_channel_subscribers` за один период и отсортируйте их сами. Рейтинг
-  относится только к проверенным каналам.
+  охватывает только выбранные каналы.
 - Даты `date_from` и `date_to` задаются как `YYYY-MM-DD`, обе границы включены.
   Истории каналов без дат используют последние 30 дней. Задавайте обе даты
   явно для сравнения; отсутствие снимков не означает нулевую аудиторию.
@@ -343,29 +325,28 @@ MCP-клиент может оборачивать эту ошибку в рез
   отслеживаний и столько же активных мест.
 - Для каждого отслеживания действует лимит **1 000 событий в сутки по Москве**.
 
-Webhook необязателен для сохранения событий в истории. Для отправки на ваш
-сервер нужен публичный HTTPS-адрес с действительным сертификатом.
-Добавьте получателя в разделе
+События сохраняются в истории без Webhook. Для доставки добавьте получателя в разделе
 [«Уведомления»](https://maxstat.ru/dashboard/notifications) и выберите его
 в мониторинге. Доступны личные чаты, группы и каналы MAX и Telegram, а также
-Webhook. Один Webhook можно использовать в нескольких мониторингах.
+Webhook. Для Webhook нужен публичный HTTPS-адрес с действительным сертификатом.
+Один Webhook можно использовать в нескольких мониторингах.
 В одном мониторинге можно выбрать не больше одного получателя каждого типа.
-Для мессенджеров действуют отдельные лимиты на получателя: до 10 сообщений
+Лимиты доставки в мессенджеры на получателя: до 10 сообщений
 в минуту и 100 событий мониторинга в сутки по Москве.
 
-Webhook-получатель должен ответить 2xx за 5 секунд. Перенаправления не
-выполняются, автоматических повторов доставки нет. Сохраняйте событие в очередь
+Сервер Webhook должен ответить 2xx за 5 секунд. Перенаправлений и автоматических
+повторов доставки нет. Сохраняйте событие в очередь
 и обрабатывайте асинхронно, учитывая `event_id` для защиты от дублей. После
 10 ошибок подряд без успеха за 24 часа Webhook отключается; успешная
-«Проверить» в «Уведомлениях» включает его снова.
+проверка кнопкой «Проверить» в «Уведомлениях» включает его снова.
 
-Мониторинг собирает новые совпадения после создания или изменения условий,
-исторические публикации не догоняет. История хранится 90 дней. Состояние
+Мониторинг собирает новые совпадения после создания или изменения условий.
+Старые публикации в историю не попадают. История хранится 90 дней. Состояние
 получателя, историю событий, лимиты и стоимость мест смотрите в кабинете.
 
 ### Пример на реальных данных
 
-Проверочный запрос к production 29 июля 2026 года вернул:
+Данные канала **MAX • Анонсы** на 29 июля 2026 года:
 
 - канал **MAX • Анонсы** с аудиторией 3 496 789 подписчиков;
 - рост с 3 054 001 до 3 496 789 с 30 июня по 29 июля:
@@ -374,9 +355,6 @@ Webhook-получатель должен ответить 2xx за 5 секун
   **17 888 688 просмотрами** и **187 460 реакциями**;
 - разбивку реакций, дневные истории просмотров и реакций;
 - 184 найденных пересылки.
-
-Значения показывают структуру реального ответа и не являются обещанием
-фиксированных показателей продукта.
 
 ### Примеры запросов
 
@@ -406,10 +384,9 @@ Webhook-получатель должен ответить 2xx за 5 секун
 
 ### Тарифы и безопасность
 
-MCP входит во все [тарифы MaxStat API](https://maxstat.ru/promo/api) без
-дополнительной оплаты. MCP и прямые вызовы API используют единый баланс
-кредитов. Текущие условия тестового доступа, объём кредитов и окончание периода
-проверяйте в кабинете и через `get_account_subscription` / `get_account_limits`.
+MCP входит во все [тарифы MaxStat API](https://maxstat.ru/promo/api).
+MCP и API расходуют общий баланс кредитов. Тариф, остаток кредитов и срок
+действия смотрите в кабинете или через `get_account_subscription` и `get_account_limits`.
 
 Никогда не публикуйте настоящий API-токен в issue, PR, конфигурации, логе или
 скриншоте. Об уязвимостях сообщайте по инструкции из
@@ -424,16 +401,12 @@ posts and comments. Receive events in MAX, Telegram, or through a webhook.
 Configure them in the [dashboard](https://maxstat.ru/dashboard/monitoring).
 
 [Service, API, and MCP news](UPDATES.md) (Russian) · [Integration versions](CHANGELOG.md).
-Dashboard sections checked on November 8, 2026.
 
-MaxStat MCP gives AI agents structured access to the live MAX messenger channel
-and publication index. It supports channel and post discovery, daily audience,
-view and reaction histories, publishing activity, attachment and reaction
-details, deletion flags, forward detection, and account credit usage.
-The public OpenAPI contract was checked on November 8, 2026: **15 tools**.
+Search MAX channels and posts, compare audience growth, views and reactions,
+and find forwards from your AI client.
 <!-- maxstat:index:en:start -->
 
-Checked November 8, 2026: **672,837 channels**,
+As of November 8, 2026: **672,837 channels**,
 **155,837,316 posts**, **42 categories**.
 [Source: MaxStat](https://maxstat.ru/service).
 
@@ -481,8 +454,7 @@ gemini extensions install https://github.com/fbmdata/maxstat-mcp
 ```
 
 For VS Code, Cursor, Windsurf, JetBrains AI Assistant, Claude Desktop, and
-generic clients, use the checked-in [`configs/`](configs/) directory. The
-Russian section above contains detailed client-specific instructions.
+other clients, use [`configs/`](configs/). Setup steps are in the Russian section above.
 
 ### Capabilities
 
@@ -494,16 +466,16 @@ Russian section above contains detailed client-specific instructions.
 - Add a MAX channel to the collection queue; this does not create monitoring.
 - Inspect the active MaxStat plan, credit balance, and request-level usage.
 
-The complete 15-tool contract, credit costs, data limits, and error handling are
-documented in [Инструменты MCP](#инструменты-mcp). Channel and post IDs are strings;
+See [Инструменты MCP](#инструменты-mcp) for all 15 tools, credit costs, limits, and errors.
+Channel and post IDs are strings;
 search pages contain 1–100 items and `offset + limit` cannot exceed 10,000.
 Use `get_post` with `include_forwards=true` to request detected forwards.
 
 ### Monitoring and webhooks
 
-Monitoring is configured in the [dashboard](https://maxstat.ru/dashboard/monitoring),
-outside MCP. The six old webhook-subscription tools have been removed.
-`get_account_subscription` remains available for billing information.
+Set up monitoring in the [dashboard](https://maxstat.ru/dashboard/monitoring).
+MCP cannot manage it. The six old webhook-subscription tools have been removed;
+`get_account_subscription` returns your billing plan.
 
 An active paid plan includes one monitoring slot; extra slots are purchased
 separately. Paused monitors do not occupy slots. One monitor tracks one channel
@@ -523,11 +495,10 @@ are not supported. Deduplicate by `event_id`. A webhook is disabled after ten
 consecutive failures without a success for 24 hours; a successful dashboard
 check re-enables it. Historical events are not backfilled.
 
-### Authentication boundary
+### Cloud connectors
 
-This release supports clients that can send the custom `X-API-Token` header.
-Publishing as a fully hosted ChatGPT or Claude cloud connector requires a
-separate OAuth 2.1 implementation.
+Use a client that can send the `X-API-Token` header. Hosted ChatGPT and Claude
+connectors need OAuth 2.1, which MaxStat does not yet support.
 
 ## Ссылки / Links
 
@@ -541,7 +512,6 @@ separate OAuth 2.1 implementation.
 
 ## Лицензия / License
 
-MIT распространяется только на опубликованные в этом репозитории манифесты,
-плагины, skill, конфигурации, документацию и вспомогательные проверки. Лицензия
-не распространяется на сервис MaxStat, API, данные, базы данных, товарные знаки
-и серверную реализацию. Подробности приведены в [`NOTICE`](NOTICE).
+Лицензия MIT покрывает файлы этого репозитория: плагины, skill, конфигурации,
+документацию и проверки. Условия использования сервиса, API, данных и товарных
+знаков — отдельно. Подробности — в [`NOTICE`](NOTICE).

@@ -1,11 +1,11 @@
 {
   "name": "maxstat-mcp",
   "version": "1.2.4",
-  "description": "Аналитика каналов и публикаций MAX / MAX channel and publication analytics.",
+  "description": "Поиск каналов и публикаций MAX, аудитория, просмотры и реакции / Search MAX channels and posts; compare audience, views and reactions.",
   "settings": [
     {
       "name": "MaxStat API token",
-      "description": "Создайте токен: https://maxstat.ru/dashboard/api",
+      "description": "Создайте API-токен в кабинете: https://maxstat.ru/dashboard/api",
       "envVar": "MAXSTAT_API_TOKEN",
       "sensitive": true
     }

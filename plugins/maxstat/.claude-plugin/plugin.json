@@ -3,7 +3,7 @@
   "name": "maxstat",
   "displayName": "MaxStat MCP",
   "version": "1.2.4",
-  "description": "Аналитика каналов и публикаций MAX / MAX channel and publication analytics.",
+  "description": "Поиск каналов и публикаций MAX, аудитория, просмотры и реакции / Search MAX channels and posts; compare audience, views and reactions.",
   "author": {
     "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
     "email": "info@fbmdata.ru",
