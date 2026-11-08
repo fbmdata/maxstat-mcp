@@ -1,7 +1,7 @@
 {
   "name": "maxstat",
-  "version": "1.2.3",
-  "description": "Поиск, аналитика и мониторинг каналов и публикаций MAX.",
+  "version": "1.2.4",
+  "description": "Поиск и аналитика каналов и публикаций MAX.",
   "author": {
     "name": "ООО «ФБМ Аналитикс» / FBM Analytics",
     "email": "info@fbmdata.ru",
@@ -15,7 +15,6 @@
     "analytics",
     "channels",
     "publications",
-    "monitoring",
     "mcp"
   ],
   "skills": "./skills/",
@@ -30,13 +29,13 @@
   "interface": {
     "displayName": "MaxStat MCP",
     "shortDescription": "Аналитика каналов и публикаций MAX",
-    "longDescription": "Ищите каналы и публикации MAX, сравнивайте аудиторию, просмотры и реакции, находите пересылки и настраивайте webhook-мониторинг.",
+    "longDescription": "Ищите каналы и публикации MAX, сравнивайте аудиторию, просмотры и реакции, находите пересылки и проверяйте расход кредитов. 15 инструментов MCP; мониторинг настраивается отдельно в личном кабинете.",
     "developerName": "ООО «ФБМ Аналитикс» / FBM Analytics",
     "category": "Data & Analytics",
     "capabilities": [
       "Поиск каналов и публикаций",
       "История аудитории и вовлечённости",
-      "Пересылки и webhook-мониторинг",
+      "Контент, вложения и пересылки",
       "Контроль тарифов и кредитов"
     ],
     "websiteURL": "https://maxstat.ru/promo/mcp",

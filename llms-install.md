@@ -47,18 +47,26 @@ For a reusable setup, prefer the environment-backed JSON above.
 
 After reconnecting, verify all of the following:
 
-1. The MCP initialization handshake succeeds with protocol version
-   `2025-06-18`.
-2. `tools/list` returns 21 MaxStat tools.
+1. The MCP initialization handshake succeeds with a protocol version supported
+   by both client and server.
+2. `tools/list` returns the 15 MaxStat tools listed in the
+   [tool reference](README.md#инструменты-mcp); compare names as well as count.
 3. The read-only `get_account_limits` call returns the current account limits.
 4. `get_categories` returns the live MAX channel categories.
 
 If the server returns `401`, check that the header name is exactly
-`X-API-Token`. Do not replace it with an `Authorization: Bearer` header.
+`X-API-Token` and that the local token is valid. The supplied configurations
+use that header; keep it when installing from these examples.
+
+If an old webhook-subscription call returns `Unknown tool`, refresh the client's
+tool list. Those six operations were removed. `get_account_subscription` is
+still supported and reports billing information.
 
 ## What the connection provides
 
 The tools cover MAX channel and post search, channel cards, subscriber/view/
-reaction/activity history, post metrics, detected reposts, keyword and channel
-webhook monitoring, and account credit usage. The full tool reference is in
-[README.md](README.md#все-21-инструмент).
+reaction/activity history, post metrics, detected reposts, and account credit
+usage. Monitoring and webhooks are configured separately in the
+[dashboard](https://maxstat.ru/dashboard/monitoring), outside MCP. Adding a
+channel with `add_channel` does not create a monitor. The full reference is in
+[README.md](README.md#инструменты-mcp).

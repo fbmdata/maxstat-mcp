@@ -214,7 +214,7 @@ test("release-bearing manifests must use the same version", async (t) => {
   assert(
     errors.some(
       (error) =>
-        error.includes("gemini-extension.json") && error.includes("1.2.3"),
+        error.includes("gemini-extension.json") && error.includes("1.2.4"),
     ),
   );
 });
@@ -235,6 +235,62 @@ test("the analytics skill must document every MCP tool", async (t) => {
       (error) => error.includes("SKILL.md") && error.includes("get_post_likes"),
     ),
   );
+});
+
+test("the README tool reference rejects a missing tool", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  const file = path.join(root, "README.md");
+  const content = await readFile(file, "utf8");
+  await writeFile(file, content.replace(/^\| `get_post_likes`[^\n]*\n/m, ""));
+
+  const errors = await validateRepository(root);
+  assert(errors.some((error) => error.includes("README.md") && error.includes("get_post_likes")));
+});
+
+test("tool references reject a removed webhook operation", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  const file = path.join(root, "README.md");
+  await writeFile(file, `${await readFile(file, "utf8")}\n| \`get_subscriptions\` | Subscriptions | Бесплатно |\n`);
+
+  const errors = await validateRepository(root);
+  assert(errors.some((error) => error.includes("README.md") && error.includes("get_subscriptions")));
+});
+
+test("tool references reject duplicate operations", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  const file = path.join(root, "plugins/maxstat/skills/maxstat-analytics/SKILL.md");
+  await writeFile(file, `${await readFile(file, "utf8")}\n| \`get_account_subscription\` | Plan | Бесплатно |\n`);
+
+  const errors = await validateRepository(root);
+  assert(errors.some((error) => error.includes("SKILL.md") && error.includes("duplicate") && error.includes("get_account_subscription")));
+});
+
+test("tool references reject an incorrect credit cost", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  const file = path.join(root, "README.md");
+  const content = await readFile(file, "utf8");
+  await writeFile(file, content.replace(/^(\| `get_post_likes`[^\n]*\|)\s*5\s*\|/m, "$1 1 |"));
+
+  const errors = await validateRepository(root);
+  assert(errors.some((error) => error.includes("README.md") && error.includes("get_post_likes") && error.includes("credits")));
+});
+
+test("current installation and agent guides reject stale tool counts", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  for (const file of ["README.md", "GEMINI.md", "llms-install.md"]) {
+    const target = path.join(root, file);
+    await writeFile(target, `${await readFile(target, "utf8")}\n21 MCP tools\n`);
+  }
+
+  const errors = await validateRepository(root);
+  for (const file of ["README.md", "GEMINI.md", "llms-install.md"]) {
+    assert(errors.some((error) => error.includes(file) && error.includes("tool count")));
+  }
 });
 
 test("the Codex marketplace does not invent an unsupported version field", async (t) => {

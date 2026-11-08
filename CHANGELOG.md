@@ -3,6 +3,37 @@
 All notable public changes to the MaxStat MCP integration will be documented in
 this file.
 
+## [1.2.4] - 2026-11-08
+
+### Fixed
+
+- Aligned the current tool reference with all 15 operations in the public API.
+  Removed six retired webhook-subscription tools from supported-tool tables
+  and agent workflows; retained the billing `get_account_subscription` tool.
+- Removed webhook-management claims from plugin and registry descriptions.
+- Corrected the claim that the server rejects Bearer authentication; shipped
+  integrations continue to use the `X-API-Token` header.
+- Kept July production index figures explicitly historical and removed
+  unverified Test Drive renewal terms.
+- Rebuilt the README demo with 15 tools and dashboard monitoring clearly
+  separated from MCP analytics.
+
+### Added
+
+- Dashboard monitoring guidance: paid slots, paused monitors, 50 query phrases,
+  filters for 100 channels, 1,000 daily events, notification recipients,
+  optional HTTPS webhooks, delivery limits, and 90-day history.
+- Guidance for string IDs, pagination limits, deleted posts, UTF-16 text links,
+  explicit forward lookup, credit usage, errors, and growth-ranking samples.
+- Exact tool and credit-cost validation for both README and analytics skill.
+- An opt-in `npm run check:api` check against the public OpenAPI schema, with
+  no credentials or credit-consuming requests. This checks the REST contract;
+  authenticated MCP discovery remains a separate installation check.
+
+The current reference was checked against source and public OpenAPI on
+November 8, 2026. Source changes to notification recipients do not by themselves
+establish that a delivery method is enabled in the live dashboard.
+
 ## [1.2.3] - 2026-07-29
 
 ### Changed
