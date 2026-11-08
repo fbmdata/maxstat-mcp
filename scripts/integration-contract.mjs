@@ -2,10 +2,11 @@ import { execFile } from "node:child_process";
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
+import { validateDeclaredToolCounts, validateToolTable } from "./tool-contract.mjs";
 
 const execFileAsync = promisify(execFile);
 
-export const RELEASE_VERSION = "1.2.3";
+export const RELEASE_VERSION = "1.2.4";
 export const MCP_URL = "https://maxstat.ru/api/mcp";
 export const TOKEN_HEADER = "X-API-Token";
 export const TOKEN_ENV = "MAXSTAT_API_TOKEN";
@@ -27,30 +28,6 @@ const JSON_FILES = [
   "configs/jetbrains.json",
   "configs/vscode.json",
   "configs/windsurf.json",
-];
-
-const TOOL_NAMES = [
-  "get_categories",
-  "search_channels",
-  "get_channel",
-  "add_channel",
-  "search_posts",
-  "get_channel_subscribers",
-  "get_channel_views",
-  "get_channel_likes",
-  "get_channel_posts",
-  "get_post",
-  "get_post_views",
-  "get_post_likes",
-  "create_channel_subscription",
-  "create_keyword_subscription",
-  "get_subscriptions",
-  "get_subscription",
-  "update_subscription",
-  "delete_subscription",
-  "get_account_subscription",
-  "get_account_limits",
-  "get_account_usage",
 ];
 
 const ALLOWED_TOKEN_VALUES = new Set([
@@ -708,11 +685,8 @@ export async function validateRepository(rootDir) {
         errors.push(`${skillFile}: missing Russian heading ${heading}.`);
       }
     }
-    for (const tool of TOOL_NAMES) {
-      if (!skill.includes(`\`${tool}\``)) {
-        errors.push(`${skillFile}: missing tool ${tool}.`);
-      }
-    }
+    errors.push(...validateToolTable(skill).map((error) => `${skillFile}: ${error}`));
+    errors.push(...validateDeclaredToolCounts(skill).map((error) => `${skillFile}: ${error}`));
   } catch (error) {
     errors.push(`${skillFile}: cannot read file (${error.message}).`);
   }
@@ -771,6 +745,8 @@ export async function validateRepository(rootDir) {
 
   try {
     const readme = await readFile(path.join(rootDir, "README.md"), "utf8");
+    errors.push(...validateToolTable(readme).map((error) => `README.md: ${error}`));
+    errors.push(...validateDeclaredToolCounts(readme).map((error) => `README.md: ${error}`));
     for (const required of [
       "codex plugin marketplace add fbmdata/maxstat-mcp",
       "claude plugin marketplace add fbmdata/maxstat-mcp",
@@ -796,6 +772,7 @@ export async function validateRepository(rootDir) {
   }
 
   for (const [file, required, forbidden] of [
+    ["GEMINI.md", ["README.md#инструменты-mcp"], []],
     [
       "llms-install.md",
       [
@@ -811,6 +788,7 @@ export async function validateRepository(rootDir) {
   ]) {
     try {
       const content = await readFile(path.join(rootDir, file), "utf8");
+      errors.push(...validateDeclaredToolCounts(content).map((error) => `${file}: ${error}`));
       for (const text of required) {
         if (!content.includes(text)) {
           errors.push(`${file}: missing required text ${text}.`);

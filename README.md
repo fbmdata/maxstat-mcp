@@ -1,13 +1,13 @@
 # MaxStat MCP
 
 [![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-4830E6)](https://modelcontextprotocol.io/)
-[![Tools](https://img.shields.io/badge/MCP_tools-21-4830E6)](#все-21-инструмент)
-[![Version](https://img.shields.io/badge/release-1.2.3-4830E6)](CHANGELOG.md)
+[![Tools](https://img.shields.io/badge/MCP_tools-15-4830E6)](#инструменты-mcp)
+[![Version](https://img.shields.io/badge/release-1.2.4-4830E6)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Official MCP Registry](https://img.shields.io/badge/Official_MCP_Registry-live-2EA44F)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.fbmdata%2Fmaxstat-mcp)
 [![Glama](https://img.shields.io/badge/Glama-listed-2EA44F)](https://glama.ai/mcp/connectors/io.github.fbmdata/maxstat-mcp)
 
-**Официальный удалённый MCP-сервер MaxStat для поиска, аналитики и мониторинга
+**Официальный удалённый MCP-сервер MaxStat для поиска и аналитики
 каналов и публикаций в мессенджере MAX.**
 
 Разработчик и оператор: **ООО «ФБМ Аналитикс» / FBM Analytics**.
@@ -16,7 +16,7 @@
 
 [Получить бесплатный API-токен](https://maxstat.ru/dashboard/api) ·
 [Подключить MaxStat MCP](#быстрый-старт) ·
-[Посмотреть все 21 инструмент](#все-21-инструмент) ·
+[Посмотреть все 15 инструментов](#инструменты-mcp) ·
 [Инструкция для AI-установщика](llms-install.md)
 
 ![Демонстрация MaxStat MCP](assets/maxstat-mcp-demo.gif)
@@ -28,11 +28,10 @@
 
 ## Русский
 
-### Что именно можно получить через MaxStat MCP
+### Возможности
 
-AI-агент подключается к живому индексу каналов и публикаций MAX и получает
-структурированные данные, а не фрагменты поисковой выдачи или вручную собранные
-скриншоты.
+MaxStat MCP возвращает карточки каналов и публикаций MAX, историю показателей,
+результаты поиска и данные о расходе кредитов.
 
 | Область             | Какие данные возвращает MCP                                                                                                                 |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -41,28 +40,31 @@ AI-агент подключается к живому индексу канал
 | Динамика аудитории  | Дневные значения, минимум, максимум, абсолютный и процентный рост за выбранный период                                                       |
 | Просмотры и реакции | Суммарные, средние и максимальные значения на публикацию и дневная история                                                                  |
 | Активность канала   | Число публикаций, дневная история и распределение по тексту, фото, видео, файлам и другим форматам                                          |
-| Поиск публикаций    | Полнотекстовый поиск с фильтрами по каналу, формату, датам, просмотрам и реакциям                                                           |
-| Карточка публикации | Текст, URL, тип, вложения, просмотры, сумма и разбивка реакций, даты и источник пересылки                                                   |
+| Поиск публикаций    | Поиск по тексту, каналу, формату и датам; сортировка по просмотрам и реакциям                                                               |
+| Карточка публикации | Текст и ссылки в нём, URL, вложения, просмотры, реакции, даты, признак удаления и источник пересылки                                        |
 | История публикации  | Дневные значения просмотров и реакций                                                                                                       |
 | Пересылки           | Найденные репосты, их URL, даты и ID каналов назначения                                                                                     |
-| Мониторинг          | Webhook на новые публикации канала или новые публикации по ключевому слову и категории                                                      |
 | Тариф и расход      | Статус тарифа, период, включённые, купленные, использованные и оставшиеся кредиты и история списаний                                        |
 
 Также можно добавить публичный или доступный по приглашению канал MAX в очередь
-отслеживания MaxStat.
+сбора данных MaxStat. Это не создаёт мониторинг или Webhook.
 
-### Проверенный масштаб индекса
+Мониторинг и Webhook настраиваются отдельно в
+[личном кабинете](https://maxstat.ru/dashboard/monitoring), через MCP они не
+управляются. Подробнее — [Мониторинг в личном кабинете](#мониторинг-в-личном-кабинете).
 
-| Проверено 29 июля 2026 года |   Живой индекс |
+### Размер индекса
+
+| Проверено 29 июля 2026 года |   Срез индекса |
 | --------------------------- | -------------: |
 | Каналы MAX                  |    **408 501** |
 | Публикации                  | **86 315 758** |
 | Категории каналов           |         **42** |
-| MCP-инструменты             |         **21** |
 
-Это показатели production на `maxstat.ru`, а не staging-окружения. Индекс
-постоянно растёт. Используйте `search_channels`, `search_posts` и
-`get_categories`, чтобы получить актуальные результаты.
+Данные относятся к 29 июля 2026 года. Текущие результаты доступны через
+`search_channels`, `search_posts` и `get_categories`.
+Список **15 инструментов** и стоимость вызовов сверены 8 ноября 2026 года с
+[публичной OpenAPI-схемой](https://maxstat.ru/api/openapi.json).
 
 ### Быстрый старт
 
@@ -70,7 +72,7 @@ AI-агент подключается к живому индексу канал
    [личном кабинете MaxStat API](https://maxstat.ru/dashboard/api).
 2. Не публикуйте токен и не добавляйте его в Git.
 3. Выберите платформу ниже.
-4. Перезапустите клиент и проверьте, что доступны 21 инструмент MaxStat.
+4. Перезапустите клиент и проверьте, что доступны 15 инструментов MaxStat.
 
 | Параметр             | Значение                     |
 | -------------------- | ---------------------------- |
@@ -111,9 +113,10 @@ codex plugin marketplace add fbmdata/maxstat-mcp
 codex plugin add maxstat@maxstat-plugins
 ```
 
-Плагин подключает MCP с правильным пользовательским заголовком
-`X-API-Token`. Не используйте Bearer-настройку: она отправляет другой заголовок
-и не подходит для MaxStat.
+Плагин подключает MCP с пользовательским заголовком `X-API-Token`.
+Все конфигурации в этом репозитории используют этот заголовок. Сервер также
+принимает `Authorization: Bearer <API_TOKEN>`; при установке по готовым
+конфигурациям сохраняйте их способ передачи токена.
 
 Для прямой установки без плагина объедините
 [`configs/codex.toml`](configs/codex.toml) со своим
@@ -228,7 +231,10 @@ Desktop.
 }
 ```
 
-### Все 21 инструмент
+### Инструменты MCP
+
+Сервер предоставляет **15 инструментов**. `get_account_subscription` возвращает
+тариф аккаунта; он не управляет мониторингом или Webhook-подписками.
 
 #### Поиск и каталог
 
@@ -257,19 +263,6 @@ Desktop.
 | `get_post_views` | Текущее число просмотров и дневную историю                         |       5 |
 | `get_post_likes` | Общее число реакций, разбивку по типам и дневную историю           |       5 |
 
-#### Webhook-мониторинг
-
-| Инструмент                    | Что возвращает или делает                                       |                           Кредиты |
-| ----------------------------- | --------------------------------------------------------------- | --------------------------------: |
-| `create_channel_subscription` | Подписывает публичный HTTPS callback на новые публикации канала | Создание бесплатно; 2 за доставку |
-| `create_keyword_subscription` | Подписывает callback на публикации по запросу и категории       | Создание бесплатно; 3 за доставку |
-| `get_subscriptions`           | Список подписок с фильтрами по статусу и типу                   |                         Бесплатно |
-| `get_subscription`            | Одна подписка, состояние доставки и последняя ошибка            |                         Бесплатно |
-| `update_subscription`         | Изменение callback URL, пауза или возобновление                 |                         Бесплатно |
-| `delete_subscription`         | Удаление webhook-подписки                                       |                         Бесплатно |
-
-Webhook должен быть доступен по публичному HTTPS-адресу.
-
 #### Тариф и использование
 
 | Инструмент                 | Что возвращает                                             |   Кредиты |
@@ -277,6 +270,81 @@ Webhook должен быть доступен по публичному HTTPS-�
 | `get_account_subscription` | Тариф, статус, период и состояние кредитов                 | Бесплатно |
 | `get_account_limits`       | Включённые, купленные, использованные и оставшиеся кредиты | Бесплатно |
 | `get_account_usage`        | Постраничную историю списаний по запросам                  | Бесплатно |
+
+#### Параметры и ограничения данных
+
+- ID каналов и публикаций передаются строками, включая отрицательные ID.
+  Не преобразуйте их в JavaScript `Number`: возможна потеря точности.
+- В поиске `limit` — от 1 до 100, `offset` — от 0; `offset + limit` не больше
+  10 000. Для больших выборок уточняйте фильтры.
+- `search_channels` сортирует по `subscribers`, `posts`, `date` или `score`.
+  Для рейтинга по росту сначала получите кандидатов, затем запросите
+  `get_channel_subscribers` за один период и отсортируйте их сами. Рейтинг
+  относится только к проверенным каналам.
+- Даты `date_from` и `date_to` задаются как `YYYY-MM-DD`, обе границы включены.
+  Истории каналов без дат используют последние 30 дней. Задавайте обе даты
+  явно для сравнения; отсутствие снимков не означает нулевую аудиторию.
+- `get_post` возвращает найденные пересылки при `include_forwards=true`.
+  По умолчанию список не запрашивается. Пустой список не доказывает, что
+  пересылок не было.
+- `search_posts` поддерживает `is_deleted`: `true` — удалённые публикации,
+  `false` — доступные, без параметра — обе группы. В карточке есть
+  `is_deleted`, `deleted_at` и `text_links`; позиции ссылок — в единицах UTF-16.
+- `get_account_usage` возвращает `items`, от новых к старым; `limit` — 1–100,
+  `offset` — от 0. `request_id` связывает списание с запросом.
+
+#### Ошибки и диагностика
+
+REST API возвращает `code`, `message`, `request_id` и, если есть, `details`.
+MCP-клиент может оборачивать эту ошибку в результат вызова инструмента.
+
+| HTTP | Действие |
+| ---- | -------- |
+| 401 | Проверить токен: он отсутствует, истёк или отозван |
+| 402 | Проверить активный период и остаток кредитов |
+| 403 | Проверить доступность аккаунта |
+| 404 | Проверить ID и наличие данных за период |
+| 422 | Исправить параметры по `details` |
+| 429 | Снизить частоту запросов и повторить позже |
+| 503 | Повторить позже с учётом `Retry-After`, если он доступен клиенту |
+
+При обращении в поддержку передайте `request_id`, без API-токена.
+При `Unknown tool` обновите список инструментов в клиенте. Старые
+`create_channel_subscription`, `create_keyword_subscription`, `get_subscriptions`,
+`get_subscription`, `update_subscription` и `delete_subscription` удалены.
+
+### Мониторинг в личном кабинете
+
+Настраивайте отслеживания в разделе
+[«Мониторинг»](https://maxstat.ru/dashboard/monitoring).
+Для активации нужен действующий платный тариф и свободное место: одно место
+входит в тариф, дополнительные покупаются в кабинете. Приостановленные
+мониторинги место не занимают.
+
+Одно отслеживание — **один канал** или **один ключевой запрос**:
+
+- Запрос содержит до **50 фраз** и может искать по всему индексу MaxStat или
+  по списку до **100 каналов**. Запрос с таким фильтром занимает одно место.
+- Для всех новых публикаций каждого из 50–100 каналов нужны 50–100 отдельных
+  отслеживаний и столько же активных мест.
+- Для каждого отслеживания действует лимит **1 000 событий в сутки по Москве**.
+
+Webhook необязателен для сохранения событий в истории. Для отправки на ваш
+сервер нужен публичный HTTPS-адрес с действительным сертификатом.
+Если в кабинете есть раздел «Уведомления», добавьте там получателя и выберите
+его в мониторинге. Один Webhook можно использовать в нескольких мониторингах.
+В одном мониторинге можно выбрать не больше одного получателя каждого типа.
+Доступность MAX и Telegram проверяйте в разделе «Уведомления» своего кабинета.
+
+Webhook-получатель должен ответить 2xx за 5 секунд. Перенаправления не
+выполняются, автоматических повторов доставки нет. Сохраняйте событие в очередь
+и обрабатывайте асинхронно, учитывая `event_id` для защиты от дублей. После
+10 ошибок подряд без успеха за 24 часа Webhook отключается; успешная
+«Проверить» в «Уведомлениях» включает его снова.
+
+Мониторинг собирает новые совпадения после создания или изменения условий,
+исторические публикации не догоняет. История хранится 90 дней. Состояние
+получателя, историю событий, лимиты и стоимость мест смотрите в кабинете.
 
 ### Пример на реальных данных
 
@@ -311,8 +379,8 @@ Webhook должен быть доступен по публичному HTTPS-�
 ```
 
 ```text
-Подпиши webhook на новые публикации со словами «искусственный интеллект» в
-категории «Технологии».
+Объясни, как в личном кабинете настроить мониторинг фраз «искусственный
+интеллект» в 80 выбранных каналах и подключить Webhook.
 ```
 
 ```text
@@ -323,8 +391,8 @@ Webhook должен быть доступен по публичному HTTPS-�
 
 MCP входит во все [тарифы MaxStat API](https://maxstat.ru/promo/api) без
 дополнительной оплаты. MCP и прямые вызовы API используют единый баланс
-кредитов. Test Drive активируется при первом API-запросе и предоставляет
-1 000 кредитов каждые 30 дней.
+кредитов. Текущие условия тестового доступа, объём кредитов и окончание периода
+проверяйте в кабинете и через `get_account_subscription` / `get_account_limits`.
 
 Никогда не публикуйте настоящий API-токен в issue, PR, конфигурации, логе или
 скриншоте. Об уязвимостях сообщайте по инструкции из
@@ -335,9 +403,10 @@ MCP входит во все [тарифы MaxStat API](https://maxstat.ru/promo
 MaxStat MCP gives AI agents structured access to the live MAX messenger channel
 and publication index. It supports channel and post discovery, daily audience,
 view and reaction histories, publishing activity, attachment and reaction
-details, forward detection, webhook monitoring, and account credit usage.
-The production index was verified on July 29, 2026 with 408,501 channels,
-86,315,758 posts, 42 channel categories, and 21 MCP tools.
+details, deletion flags, forward detection, and account credit usage.
+The public OpenAPI contract was checked on November 8, 2026: **15 tools**.
+The historical production index snapshot from July 29, 2026 contained 408,501
+channels, 86,315,758 posts, and 42 channel categories; these are not live counts.
 
 ### Connection
 
@@ -391,11 +460,35 @@ Russian section above contains detailed client-specific instructions.
   content-format mix.
 - Retrieve post text, attachments, metrics, reaction details, histories, and
   detected forwards.
-- Create and manage channel or keyword webhook subscriptions.
+- Add a MAX channel to the collection queue; this does not create monitoring.
 - Inspect the active MaxStat plan, credit balance, and request-level usage.
 
-The complete 21-tool contract and credit costs are documented in
-[Все 21 инструмент](#все-21-инструмент).
+The complete 15-tool contract, credit costs, data limits, and error handling are
+documented in [Инструменты MCP](#инструменты-mcp). Channel and post IDs are strings;
+search pages contain 1–100 items and `offset + limit` cannot exceed 10,000.
+Use `get_post` with `include_forwards=true` to request detected forwards.
+
+### Monitoring and webhooks
+
+Monitoring is configured in the [dashboard](https://maxstat.ru/dashboard/monitoring),
+outside MCP. The six old webhook-subscription tools have been removed.
+`get_account_subscription` remains available for billing information.
+
+An active paid plan includes one monitoring slot; extra slots are purchased
+separately. Paused monitors do not occupy slots. One monitor tracks one channel
+or one keyword query of up to 50 phrases, optionally restricted to 100 channels.
+A query covering 80 channels takes one slot; collecting every new post from
+80 channels takes 80 monitors and active slots. Each monitor records up to
+1,000 events per Moscow calendar day; history is retained for 90 days.
+
+Webhook delivery needs a public HTTPS endpoint. If your dashboard includes
+Notifications, add a recipient there and select it in the monitor. One webhook
+can serve several monitors, with at most one recipient of each type per monitor.
+Check this section of your dashboard for MAX and Telegram delivery options.
+Respond with 2xx within five seconds; redirects and automatic delivery retries
+are not supported. Deduplicate by `event_id`. A webhook is disabled after ten
+consecutive failures without a success for 24 hours; a successful dashboard
+check re-enables it. Historical events are not backfilled.
 
 ### Authentication boundary
 

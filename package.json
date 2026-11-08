@@ -1,6 +1,6 @@
 {
   "name": "maxstat-mcp-integration",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "private": true,
   "description": "Validation tooling for the public MaxStat MCP integration package.",
   "type": "module",
@@ -8,7 +8,8 @@
     "test": "node --test tests/*.test.mjs",
     "validate": "node scripts/validate-integrations.mjs",
     "lint": "npx --yes markdownlint-cli2@0.23.2 \"**/*.md\"",
-    "check": "npm test && npm run validate && npm run lint"
+    "check": "npm test && npm run validate && npm run lint",
+    "check:api": "node scripts/check-public-api.mjs"
   },
   "engines": {
     "node": ">=22"
