@@ -2,31 +2,34 @@
 
 ## Reporting a vulnerability
 
-Please do not disclose security vulnerabilities in a public GitHub issue.
+Report vulnerabilities privately to [info@fbmdata.ru](mailto:info@fbmdata.ru).
+Do not post them in public GitHub issues.
 
-Send a report to [info@fbmdata.ru](mailto:info@fbmdata.ru) with:
+Include:
 
-- a description of the issue and its potential impact;
+- what is wrong and what it exposes or allows;
 - the affected endpoint, client, or configuration;
-- reproducible steps or a proof of concept;
-- any suggested mitigation, if available.
+- steps to reproduce it or a proof of concept;
+- a suggested fix or workaround, if you have one.
 
-Do not include real API tokens, personal data, or data obtained from other users.
-We will acknowledge the report and coordinate further communication by email.
+Do not send real API tokens, personal data, or other users' data.
+We will acknowledge your report and continue by email.
 
 ## Scope
 
-This repository contains public documentation, manifests, and connection
-examples for the hosted MaxStat MCP service. The server-side implementation is
-not included in this repository.
+This repository contains documentation, manifests, and connection examples for
+MaxStat MCP. MaxStat hosts the service; its server code is not in this repository.
 
 ---
 
 ## Политика безопасности
 
-Не публикуйте информацию об уязвимости в открытом GitHub Issue.
+Сообщайте об уязвимостях на [info@fbmdata.ru](mailto:info@fbmdata.ru).
+Не публикуйте их в открытых GitHub Issues.
 
-Отправьте описание проблемы на
-[info@fbmdata.ru](mailto:info@fbmdata.ru), указав затронутый endpoint или
-конфигурацию, возможное влияние и шаги для воспроизведения. Не прикладывайте
-рабочие API-токены, персональные данные или данные других пользователей.
+Опишите, что позволяет сделать уязвимость, какой endpoint, клиент или
+конфигурацию она затрагивает и как её воспроизвести. Если знаете способ
+исправления или обхода, добавьте его в письмо.
+
+Не прикладывайте рабочие API-токены, персональные данные и данные других
+пользователей.

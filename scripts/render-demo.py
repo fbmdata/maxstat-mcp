@@ -19,7 +19,7 @@ if snapshot.get('source') != 'https://maxstat.ru/service' or any(
 ):
     raise ValueError('A valid production index snapshot is required.')
 observed = datetime.datetime.fromisoformat(snapshot['observed_at'].replace('Z', '+00:00'))
-checked = (observed + datetime.timedelta(hours=3)).strftime('%d.%m.%Y')
+as_of = (observed + datetime.timedelta(hours=3)).strftime('%d.%m.%Y')
 FFMPEG = os.environ.get('MAXSTAT_FFMPEG') or (
     '/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg' if Path('/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg').is_file()
     else shutil.which('ffmpeg')
@@ -87,7 +87,7 @@ for i, (key, label) in enumerate([('channels', 'каналов MAX'), ('posts', 
         text(label, x + 17, 278, 20, '0xB9B3CC'),
     ])
 stats.extend([
-    text(f'Проверено {checked} · maxstat.ru/service', 48, 373, 19, '0xB9B3CC'),
+    text(f'На {as_of} · maxstat.ru/service', 48, 373, 19, '0xB9B3CC'),
     text('Codex · Claude Code · Cursor · Gemini CLI', 48, 432, 24),
     text('Удалённый сервер · Streamable HTTP', 48, 485, 18, '0x9D96AE'),
 ])
@@ -95,13 +95,13 @@ slide(1, stats)
 
 cards = [
     ('Поиск каналов', 'Тематика · аудитория · категории'),
-    ('Динамика аудитории', 'История · рост · сравнение'),
+    ('Рост аудитории', 'История · рост · сравнение'),
     ('Публикации', 'Текст · вложения · даты'),
-    ('Вовлечённость', 'Просмотры · реакции'),
+    ('Просмотры и реакции', 'По дням · всего · в среднем'),
     ('Пересылки', 'Источник · найденные репосты'),
     ('Тариф и кредиты', 'Остаток · история списаний'),
 ]
-filters = [text('Доступные данные', 48, 105, 32, bold=True)]
+filters = [text('Что можно узнать', 48, 105, 32, bold=True)]
 for i, (title, subtitle) in enumerate(cards):
     x = 48 + i % 3 * 292
     y = 173 + i // 3 * 138
@@ -110,7 +110,7 @@ for i, (title, subtitle) in enumerate(cards):
         text(title, x + 17, y + 24, 20, bold=True),
         text(subtitle, x + 17, y + 66, 14, '0xB9B3CC'),
     ])
-filters.append(text('Мониторинг и Webhook — отдельно в личном кабинете', 48, 482, 20, '0xB9B3CC'))
+filters.append(text('Мониторинг и уведомления — в личном кабинете', 48, 482, 20, '0xB9B3CC'))
 slide(2, filters)
 
 slide(3, [
@@ -122,7 +122,7 @@ slide(3, [
     text('02  Получить историю за месяц', 61, 347, 23, bold=True),
     text('get_channel_subscribers', 500, 350, 20, '0xB4A7FF'),
     text('03  Сопоставить рост и вернуть ссылки', 61, 402, 23, bold=True),
-    text('Одинаковый период · факты · ограничения выборки', 61, 475, 19, '0xB9B3CC'),
+    text('Сравнивайте каналы за один и тот же период', 61, 475, 19, '0xB9B3CC'),
 ])
 
 slide(4, [

@@ -1,17 +1,16 @@
 name: Предложение по улучшению
-description: Предложите улучшение публичного пакета MaxStat MCP
+description: Предложите новую функцию или изменение MaxStat MCP
 title: "[Идея]: "
 body:
   - type: markdown
     attributes:
       value: |
-        Здесь можно предложить новую интеграцию, улучшение конфигурации,
-        документации или возможностей MaxStat MCP.
+        Предложите новую интеграцию, функцию или изменение настроек и документации.
 
   - type: dropdown
     id: area
     attributes:
-      label: Область
+      label: Что хотите улучшить
       options:
         - Новый MCP-клиент или платформа
         - Инструменты и данные MaxStat MCP
@@ -32,21 +31,21 @@ body:
   - type: textarea
     id: solution
     attributes:
-      label: Предлагаемое решение
-      description: Расскажите, как вы видите желаемый результат.
+      label: Ваше решение
+      description: Опишите, что должно измениться и как это поможет.
     validations:
       required: true
 
   - type: textarea
     id: context
     attributes:
-      label: Дополнительный контекст
-      description: При необходимости добавьте ссылки или обезличенные примеры.
+      label: Ссылки и примеры
+      description: Добавьте материалы, которые помогут понять задачу. Удалите личные данные.
 
   - type: checkboxes
     id: safety
     attributes:
       label: Безопасность
       options:
-        - label: Я проверил, что сообщение не содержит API-токенов и персональных данных.
+        - label: В сообщении нет API-токенов и персональных данных.
           required: true

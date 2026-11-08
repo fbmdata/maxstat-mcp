@@ -1,12 +1,11 @@
 name: Проблема подключения
-description: Сообщите о несовместимости MaxStat MCP с конкретным клиентом
+description: Сообщите, если MaxStat MCP не работает в вашем клиенте
 title: "[Совместимость]: "
 body:
   - type: markdown
     attributes:
       value: |
-        Спасибо за сообщение. Не публикуйте API-токены, персональные данные
-        или содержимое ответов, которое не предназначено для общего доступа.
+        Не публикуйте API-токены, персональные данные и ответы с закрытыми данными.
 
   - type: dropdown
     id: client
@@ -38,8 +37,8 @@ body:
   - type: textarea
     id: steps
     attributes:
-      label: Шаги воспроизведения
-      description: Укажите использованную инструкцию или конфигурацию.
+      label: Как повторить ошибку
+      description: Укажите инструкцию или настройки, с которыми возникла ошибка.
       placeholder: |
         1. Добавил конфигурацию…
         2. Перезапустил клиент…
@@ -50,14 +49,14 @@ body:
   - type: textarea
     id: expected
     attributes:
-      label: Ожидаемый результат
+      label: Что должно было произойти
     validations:
       required: true
 
   - type: textarea
     id: actual
     attributes:
-      label: Фактический результат
+      label: Что произошло
       description: Удалите токены и персональные данные из логов и скриншотов.
     validations:
       required: true
@@ -67,5 +66,5 @@ body:
     attributes:
       label: Безопасность
       options:
-        - label: Я проверил, что сообщение не содержит API-токенов и персональных данных.
+        - label: В сообщении нет API-токенов и персональных данных.
           required: true
