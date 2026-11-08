@@ -1,8 +1,11 @@
+import { gifMetadata } from "./media-contract.mjs";
+export { gifMetadata } from "./media-contract.mjs";
 import { execFile } from "node:child_process";
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { validateDeclaredToolCounts, validateToolTable } from "./tool-contract.mjs";
+import { validateIndexStats, updateReadmeIndexStats, validateDemoIndexStats } from "./index-stats.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -13,6 +16,7 @@ export const TOKEN_ENV = "MAXSTAT_API_TOKEN";
 export const MCP_REMOTE_PACKAGE = "mcp-remote@0.1.38";
 
 const JSON_FILES = [
+  "data/index-stats.json",
   "server.json",
   "package.json",
   ".agents/plugins/marketplace.json",
@@ -263,110 +267,6 @@ async function pngDimensions(filePath) {
   return {
     width: header.readUInt32BE(16),
     height: header.readUInt32BE(20),
-  };
-}
-
-function skipGifSubBlocks(content, initialOffset) {
-  let offset = initialOffset;
-  while (offset < content.length) {
-    const blockLength = content[offset];
-    offset += 1;
-    if (blockLength === 0) {
-      return offset;
-    }
-    if (offset + blockLength > content.length) {
-      throw new Error("truncated data sub-block");
-    }
-    offset += blockLength;
-  }
-  throw new Error("unterminated data sub-block");
-}
-
-export function gifMetadata(content) {
-  if (!Buffer.isBuffer(content) || content.length < 14) {
-    throw new Error("file is too short");
-  }
-
-  const signature = content.subarray(0, 6).toString("ascii");
-  if (signature !== "GIF87a" && signature !== "GIF89a") {
-    throw new Error("invalid signature");
-  }
-
-  const width = content.readUInt16LE(6);
-  const height = content.readUInt16LE(8);
-  const logicalScreenPacked = content[10];
-  let offset = 13;
-
-  if ((logicalScreenPacked & 0x80) !== 0) {
-    offset += 3 * 2 ** ((logicalScreenPacked & 0x07) + 1);
-  }
-
-  let durationCentiseconds = 0;
-  let frameCount = 0;
-  let hasTrailer = false;
-
-  while (offset < content.length) {
-    const marker = content[offset];
-    offset += 1;
-
-    if (marker === 0x3b) {
-      hasTrailer = true;
-      break;
-    }
-
-    if (marker === 0x21) {
-      if (offset >= content.length) {
-        throw new Error("truncated extension");
-      }
-      const extensionLabel = content[offset];
-      offset += 1;
-
-      if (extensionLabel === 0xf9) {
-        if (content[offset] !== 4 || offset + 5 >= content.length) {
-          throw new Error("invalid graphic control extension");
-        }
-        durationCentiseconds += content.readUInt16LE(offset + 2);
-        offset += 5;
-        if (content[offset] !== 0) {
-          throw new Error("unterminated graphic control extension");
-        }
-        offset += 1;
-      } else {
-        offset = skipGifSubBlocks(content, offset);
-      }
-      continue;
-    }
-
-    if (marker === 0x2c) {
-      if (offset + 9 > content.length) {
-        throw new Error("truncated image descriptor");
-      }
-      const imagePacked = content[offset + 8];
-      offset += 9;
-      if ((imagePacked & 0x80) !== 0) {
-        offset += 3 * 2 ** ((imagePacked & 0x07) + 1);
-      }
-      if (offset >= content.length) {
-        throw new Error("missing image data");
-      }
-      offset += 1;
-      offset = skipGifSubBlocks(content, offset);
-      frameCount += 1;
-      continue;
-    }
-
-    throw new Error(`unexpected block marker 0x${marker.toString(16)}`);
-  }
-
-  if (!hasTrailer || frameCount === 0) {
-    throw new Error("incomplete animation");
-  }
-
-  return {
-    width,
-    height,
-    frameCount,
-    durationMs: durationCentiseconds * 10,
   };
 }
 
@@ -807,5 +707,22 @@ export async function validateRepository(rootDir) {
     }
   }
 
+  const snapshot = documents.get("data/index-stats.json");
+  if (documents.has("data/index-stats.json")) {
+    try {
+      validateIndexStats(snapshot);
+      const readme = await readFile(path.join(rootDir, "README.md"), "utf8");
+      if (updateReadmeIndexStats(readme, snapshot) !== readme) {
+        errors.push("README.md: index statistics must match data/index-stats.json.");
+      }
+    } catch (error) {
+      errors.push(`README.md: invalid index statistics (${error.message}).`);
+    }
+    try {
+      validateDemoIndexStats(await readFile(path.join(rootDir, "assets/maxstat-mcp-demo.gif")), snapshot);
+    } catch (error) {
+      errors.push(`assets/maxstat-mcp-demo.gif: invalid index statistics (${error.message}).`);
+    }
+  }
   return errors;
 }

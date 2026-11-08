@@ -3,6 +3,21 @@
 All notable public changes to the MaxStat MCP integration will be documented in
 this file.
 
+## [Unreleased]
+
+### Changed
+
+- Refreshed the index snapshot from MaxStat on November 8, 2026: 672,837
+  channels, 155,837,316 posts, and 42 categories.
+- Updated both README languages and the demo from one dated snapshot.
+
+### Added
+
+- A repeatable counter refresh with a dated browser-HTML import when the public
+  page requires a CAPTCHA. Failed reads and renders preserve the previous files.
+- A portable demo renderer and checks that README and GIF statistics match
+  `data/index-stats.json`.
+
 ## [1.2.4] - 2026-11-08
 
 ### Fixed

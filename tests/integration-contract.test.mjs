@@ -51,13 +51,25 @@ test("the checked-in repository satisfies every integration invariant", async ()
   assert.deepEqual(await validateRepository(repoRoot), []);
 });
 
-test("the README uses the production index snapshot instead of staging data", async () => {
-  const readme = await readFile(path.join(repoRoot, "README.md"), "utf8");
+test("README and GIF cannot drift from the shared index snapshot", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  await updateJson(root, "data/index-stats.json", (snapshot) => {
+    snapshot.channels += 1;
+  });
+  const errors = await validateRepository(root);
+  assert(errors.some((error) => error.includes("README.md") && error.includes("index statistics")));
+  assert(errors.some((error) => error.includes("maxstat-mcp-demo.gif") && error.includes("statistics")));
+});
 
-  assert.match(readme, /Проверено 29 июля 2026 года/);
-  assert.match(readme, /\*\*408 501\*\*/);
-  assert.match(readme, /\*\*86 315 758\*\*/);
-  assert.doesNotMatch(readme, /367 759|85 720 012/);
+test("invalid JSON snapshot values cannot bypass index validation", async (t) => {
+  const { validateRepository } = await loadValidator();
+  const root = await fixture(t);
+  for (const value of [null, false, 0, [], {}, "unavailable"]) {
+    await writeFile(path.join(root, "data/index-stats.json"), `${JSON.stringify(value)}\n`);
+    const errors = await validateRepository(root);
+    assert(errors.some((error) => error.includes("index statistics")), JSON.stringify(value));
+  }
 });
 
 test("the real-data example is refreshed from production", async () => {

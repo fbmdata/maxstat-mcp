@@ -55,14 +55,18 @@ MaxStat MCP возвращает карточки каналов и публик
 
 ### Размер индекса
 
-| Проверено 29 июля 2026 года |   Срез индекса |
-| --------------------------- | -------------: |
-| Каналы MAX                  |    **408 501** |
-| Публикации                  | **86 315 758** |
-| Категории каналов           |         **42** |
+<!-- maxstat:index:ru:start -->
 
-Данные относятся к 29 июля 2026 года. Текущие результаты доступны через
-`search_channels`, `search_posts` и `get_categories`.
+| Проверено 8 ноября 2026 года |           Всего |
+| ---------------------------- | --------------: |
+| Каналы MAX                   |     **672 837** |
+| Публикации                   | **155 837 316** |
+| Категории                    |          **42** |
+
+[Источник: MaxStat](https://maxstat.ru/service).
+
+<!-- maxstat:index:ru:end -->
+
 Список **15 инструментов** и стоимость вызовов сверены 8 ноября 2026 года с
 [публичной OpenAPI-схемой](https://maxstat.ru/api/openapi.json).
 
@@ -405,8 +409,13 @@ and publication index. It supports channel and post discovery, daily audience,
 view and reaction histories, publishing activity, attachment and reaction
 details, deletion flags, forward detection, and account credit usage.
 The public OpenAPI contract was checked on November 8, 2026: **15 tools**.
-The historical production index snapshot from July 29, 2026 contained 408,501
-channels, 86,315,758 posts, and 42 channel categories; these are not live counts.
+<!-- maxstat:index:en:start -->
+
+Checked November 8, 2026: **672,837 channels**,
+**155,837,316 posts**, **42 categories**.
+[Source: MaxStat](https://maxstat.ru/service).
+
+<!-- maxstat:index:en:end -->
 
 ### Connection
 

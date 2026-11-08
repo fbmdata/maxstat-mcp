@@ -9,7 +9,9 @@
     "validate": "node scripts/validate-integrations.mjs",
     "lint": "npx --yes markdownlint-cli2@0.23.2 \"**/*.md\"",
     "check": "npm test && npm run validate && npm run lint",
-    "check:api": "node scripts/check-public-api.mjs"
+    "check:api": "node scripts/check-public-api.mjs",
+    "refresh:stats": "node scripts/refresh-index-stats.mjs",
+    "render:demo": "python3 scripts/render-demo.py"
   },
   "engines": {
     "node": ">=22"
