@@ -14,6 +14,8 @@ see [MaxStat updates](UPDATES.md) (Russian).
 
 ### Added
 
+- Documented the public API's `post_type=poll` filter and `type=poll` responses
+  for search results and post details.
 - A service, public API, and MCP news log linked from README.
 - Instructions for MAX, Telegram, and Webhook notifications, with separate
   messenger delivery limits.

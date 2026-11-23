@@ -28,6 +28,9 @@
 
 ### Что нового
 
+**Опросы в API.** Ищите публикации с опросами по фильтру `post_type=poll`.
+В результатах поиска и карточке публикации они имеют тип `poll`.
+
 **Мониторинг и уведомления.** Отслеживайте каналы и ключевые фразы в публикациях
 и комментариях MAX. Получайте события в MAX, Telegram или на Webhook.
 Настройка — в [личном кабинете](https://maxstat.ru/dashboard/monitoring).
@@ -286,6 +289,8 @@ gemini extensions install https://github.com/fbmdata/maxstat-mcp
 - `search_posts` поддерживает `is_deleted`: `true` — удалённые публикации,
   `false` — доступные, без параметра — обе группы. В карточке есть
   `is_deleted`, `deleted_at` и `text_links`; позиции ссылок — в единицах UTF-16.
+- В публичном API фильтр `post_type=poll` выбирает публикации с опросами.
+  В результатах поиска и карточке публикации поле `type` может содержать `poll`.
 - `get_account_usage` возвращает `items`, от новых к старым; `limit` — 1–100,
   `offset` — от 0. `request_id` связывает списание с запросом.
 
@@ -396,6 +401,9 @@ MCP и API расходуют общий баланс кредитов. Тари
 
 ### What's new
 
+**Polls in the API.** Find poll posts with `post_type=poll`.
+Search results and post details identify them with `type=poll`.
+
 **Monitoring and notifications.** Track channels and keyword matches in MAX
 posts and comments. Receive events in MAX, Telegram, or through a webhook.
 Configure them in the [dashboard](https://maxstat.ru/dashboard/monitoring).
@@ -470,6 +478,8 @@ See [Инструменты MCP](#инструменты-mcp) for all 15 tools, 
 Channel and post IDs are strings;
 search pages contain 1–100 items and `offset + limit` cannot exceed 10,000.
 Use `get_post` with `include_forwards=true` to request detected forwards.
+The public API accepts `post_type=poll` to find poll posts. Search results and
+post details can return `poll` in the `type` field.
 
 ### Monitoring and webhooks
 
